@@ -49,8 +49,8 @@ run_cmd git clone --branch develop "${CB_REPO}" "$CB_PATH"
 # Set chmod +x on script files
 run_cmd chmod +x $CB_PATH/*.sh
 
-echo "$SCRIPT_PATH"
-echo "$CB_INSTALL_SCRIPT"
+$VERBOSE && echo "Script Path: "$SCRIPT_PATH
+$VERBOSE && echo "CB Install Path: "$CB_INSTALL_SCRIPT
 
 ## Create script symlinks in /usr/local/bin
 shopt -s nullglob
