@@ -10,10 +10,14 @@
 #                     GNU General Public License v3.0                           #
 #################################################################################
 
+## Variables
+VERBOSE=false
+
 ## Constants
 readonly SYSCTL_PATH="/etc/sysctl.conf"
 readonly APT_SOURCES_URL="https://raw.githubusercontent.com/cloudbox/cb/master/apt-sources"
 readonly PYTHON_CMD_SUFFIX="-m pip install \
+                              --no-cache-dir \
                               --disable-pip-version-check \
                               --upgrade \
                               --force-reinstall"
@@ -21,6 +25,14 @@ readonly PYTHON3_CMD="python3 $PYTHON_CMD_SUFFIX"
 readonly PYTHON2_CMD="python $PYTHON_CMD_SUFFIX"
 readonly PIP="9.0.3"
 readonly ANSIBLE=">=2.8,<2.9"
+
+while getopts 'v' f; do
+	case $f in
+	v)	VERBOSE=true;;
+	esac
+done
+
+$VERBOSE || exec >/dev/null
 
 ## Disable IPv6
 if [ -f "$SYSCTL_PATH" ]; then
@@ -57,7 +69,6 @@ fi
 
 ## Environmental Variables
 export DEBIAN_FRONTEND=noninteractive
-
 
 ## Install Pre-Dependencies
 apt-get install -y --reinstall \

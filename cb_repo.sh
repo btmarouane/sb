@@ -10,8 +10,17 @@
 #########################################################################
 
 ## Variables
+VERBOSE=false
 CLOUDBOX_PATH="/srv/git/cloudbox"
 CLOUDBOX_REPO="https://github.com/cloudbox/cloudbox.git"
+
+while getopts 'v' f; do
+	case $f in
+	v)	VERBOSE=true;;
+	esac
+done
+
+$VERBOSE || exec >/dev/null
 
 ## Clone Cloudbox and pull latest commit
 if [ -d "$CLOUDBOX_PATH" ]; then
