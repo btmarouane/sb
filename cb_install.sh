@@ -12,7 +12,7 @@
 ## Variables
 VERBOSE=false
 CB_REPO="https://github.com/Cloudbox/cb.git"
-CB_PATH="/usr/local/bin/cloudbox"
+CB_PATH="/opt/cb"
 CB_INSTALL_SCRIPT="$CB_PATH/cb_install.sh"
 SCRIPT_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/$(basename "${BASH_SOURCE[0]}")"
 
@@ -49,8 +49,6 @@ run_cmd chmod +x $CB_PATH/*.sh
 
 echo "$SCRIPT_PATH"
 echo "$CB_INSTALL_SCRIPT"
-
-cp /vagrant/*.sh $CB_PATH/
 
 # Relaunch script from new location
 if [ "$SCRIPT_PATH" != "$CB_INSTALL_SCRIPT" ]; then
