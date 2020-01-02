@@ -23,7 +23,6 @@ function ansible_playbook_command() {
     '/usr/local/bin/ansible-playbook' \
     "${cloudbox_repo}/cloudbox.yml" \
     --become \
-    -vv \
     ${arg}
   cd - >/dev/null
 }
