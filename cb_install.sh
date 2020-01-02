@@ -52,6 +52,15 @@ run_cmd chmod +x $CB_PATH/*.sh
 echo "$SCRIPT_PATH"
 echo "$CB_INSTALL_SCRIPT"
 
+## Create script symlinks in /usr/local/bin
+shopt -s nullglob
+for i in "$CB_PATH"/*.sh; do
+    if [ ! -f "/usr/local/bin/$(basename "${i%.*}")" ]; then
+        run_cmd ln -s "${i}" "/usr/local/bin/$(basename "${i%.*}")"
+    fi
+done
+shopt -u nullglob
+
 # Relaunch script from new location
 if [ "$SCRIPT_PATH" != "$CB_INSTALL_SCRIPT" ]; then
     bash -H "$CB_INSTALL_SCRIPT" "$@"
