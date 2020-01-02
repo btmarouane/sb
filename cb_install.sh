@@ -43,8 +43,8 @@ if [ -d "$CB_PATH" ]; then
     run_cmd rm -rf $CB_PATH;
 fi
 
-# ## Clone CB repo
-run_cmd git clone "${CB_REPO}" "$CB_PATH"
+# Clone CB repo
+run_cmd git clone --branch develop "${CB_REPO}" "$CB_PATH"
 
 # Set chmod +x on script files
 run_cmd chmod +x $CB_PATH/*.sh

@@ -27,8 +27,8 @@ if [ -d "$CLOUDBOX_PATH" ]; then
     if [ -d "$CLOUDBOX_PATH/.git" ]; then
         cd "$CLOUDBOX_PATH"
         git fetch --all --prune
-        git checkout master
-        git reset --hard origin/master
+        git checkout develop
+        git reset --hard origin/develop
         git submodule update --init --recursive
     else
         cd "$CLOUDBOX_PATH"
@@ -36,8 +36,8 @@ if [ -d "$CLOUDBOX_PATH" ]; then
         git init
         git remote add origin "$CLOUDBOX_REPO"
         git fetch --all --prune
-        git branch master origin/master
-        git reset --hard origin/master
+        git branch master origin/develop
+        git reset --hard origin/develop
         git submodule update --init --recursive
     fi
 else
