@@ -16,15 +16,38 @@ if [ $EUID != 0 ]; then
     exit $?
 fi
 
-function ansible_playbook_command() {
+# Variables
+CLOUDBOX_REPO="/srv/git/cloudbox"
+
+
+function ansible_playbook() {
   arg=("$@")
-  cloudbox_repo="/srv/git/cloudbox"
-  cd "${cloudbox_repo}"
-    '/usr/local/bin/ansible-playbook' \
-    "${cloudbox_repo}/cloudbox.yml" \
+
+  if [[ $arg =~ "settings" ]]; then
+     SETTINGS_SKIP_TAG=""
+  else
+     SETTINGS_SKIP_TAG="--skip-tags settings"
+  fi
+
+  cd "${CLOUDBOX_REPO}"
+
+  '/usr/local/bin/ansible-playbook' \
+    ${CLOUDBOX_REPO}/cloudbox.yml \
     --become \
-    ${arg}
+    ${SETTINGS_SKIP_TAG} \
+    --tags ${arg}
+
   cd - >/dev/null
+}
+
+function update() {
+    echo "Updating Cloudbox..."
+    cd "${CLOUDBOX_REPO}"
+    git fetch >/dev/null
+    git reset --hard @{u} >/dev/null
+    git checkout develop >/dev/null
+    git reset --hard @{u} >/dev/null
+    ansible_playbook "settings"
 }
 
 role=""  # Default to empty package
@@ -56,14 +79,12 @@ case "$subcommand" in
   # Parse options to the various sub commands
 
   update)
-    echo "Updating Cloudbox..."
-    ./cb_repo.sh
-    ansible_playbook_command "--tags settings"
+    update
     ;;
 
   install)
     role=${1}
-    ansible_playbook_command "--skip-tags settings --tags ${role}"
+    ansible_playbook "${role}"
     ;;
 
   *)
