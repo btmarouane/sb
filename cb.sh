@@ -19,6 +19,14 @@ fi
 # Variables
 CLOUDBOX_REPO="/srv/git/cloudbox"
 
+function git_fetch_and_reset () {
+    git fetch --quiet >/dev/null
+    git clean --quiet -df >/dev/null
+    git reset --quiet --hard @{u} >/dev/null
+    git checkout --quiet develop >/dev/null
+    git clean --quiet -df >/dev/null
+    git reset --quiet --hard @{u} >/dev/null
+}
 
 function ansible_playbook() {
   arg=("$@")
@@ -40,14 +48,25 @@ function ansible_playbook() {
   cd - >/dev/null
 }
 
-function update() {
-    echo "Updating Cloudbox..."
+function update () {
+    local OLD_COMMIT
+    local NEW_COMMIT
+
+    echo -e "Updating Cloudbox...\n"
+
     cd "${CLOUDBOX_REPO}"
-    git fetch >/dev/null
-    git reset --hard @{u} >/dev/null
-    git checkout develop >/dev/null
-    git reset --hard @{u} >/dev/null
-    ansible_playbook "settings"
+
+    OLD_COMMIT=$(git rev-parse --short HEAD)
+
+    git_fetch_and_reset
+
+    NEW_COMMIT=$(git rev-parse --short HEAD)
+
+    if [ "$OLD_COMMIT" != "$NEW_COMMIT" ]; then
+        ansible_playbook "settings"
+    fi
+
+    echo -e "\nUpdating Complete."
 }
 
 role=""  # Default to empty package
