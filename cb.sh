@@ -102,7 +102,7 @@ case "$subcommand" in
     ;;
 
   install)
-    role=${1}
+    role=${@}
     ansible_playbook "${role}"
     ;;
 
