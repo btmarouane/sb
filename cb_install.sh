@@ -12,7 +12,7 @@
 ## Variables
 VERBOSE=false
 CB_REPO="https://github.com/Cloudbox/cb.git"
-CB_PATH="/opt/cb"
+CB_PATH="/srv/git/cb"
 CB_INSTALL_SCRIPT="$CB_PATH/cb_install.sh"
 SCRIPT_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/$(basename "${BASH_SOURCE[0]}")"
 
@@ -44,6 +44,7 @@ if [ -d "$CB_PATH" ]; then
 fi
 
 # Clone CB repo
+run_cmd mkdir -p /srv/git
 run_cmd git clone --branch develop "${CB_REPO}" "$CB_PATH"
 
 # Set chmod +x on script files
