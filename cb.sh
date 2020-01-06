@@ -49,24 +49,40 @@ function ansible_playbook() {
 }
 
 function update () {
-    local OLD_COMMIT
-    local NEW_COMMIT
+
+    declare -A old_object_ids
+    declare -A new_object_ids
+    config_files=('accounts' 'settings' 'adv_settings' 'backup_config')
+    config_files_are_changed=false
 
     echo -e "Updating Cloudbox...\n"
 
     cd "${CLOUDBOX_REPO}"
 
-    OLD_COMMIT=$(git rev-parse --short HEAD)
+    # Get Git Object IDs for config files
+    for file in "${config_files[@]}"; do
+        old_object_ids["$file"]=$(git hash-object defaults/"$file".yml.default)
+    done
 
     git_fetch_and_reset
 
-    NEW_COMMIT=$(git rev-parse --short HEAD)
+    # Get Git Object IDs for config files
+    for file in "${config_files[@]}"; do
+        new_object_ids["$file"]=$(git hash-object defaults/"$file".yml.default)
+    done
 
-    if [ "$OLD_COMMIT" != "$NEW_COMMIT" ]; then
-        ansible_playbook "settings"
-    fi
+    # Compare Git Object IDs
+    for file in "${config_files[@]}"; do
+        if [ ${old_object_ids[$file]} != ${new_object_ids[$file]} ]; then
+            config_files_are_changed=true
+            break
+        fi
+    done
 
-    echo -e "\nUpdating Complete."
+    $config_files_are_changed && ansible_playbook "settings" && echo -e '\n'
+
+    echo -e "Updating Complete."
+
 }
 
 role=""  # Default to empty package
