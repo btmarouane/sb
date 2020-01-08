@@ -26,6 +26,7 @@ function git_fetch_and_reset () {
     git checkout --quiet develop >/dev/null
     git clean --quiet -df >/dev/null
     git reset --quiet --hard @{u} >/dev/null
+    git submodule update --init --recursive
 }
 
 function ansible_playbook() {
