@@ -40,6 +40,8 @@ function ansible_playbook() {
 
   cd "${CLOUDBOX_REPO}"
 
+  echo "" > cloudbox.log
+
   '/usr/local/bin/ansible-playbook' \
     ${CLOUDBOX_REPO}/cloudbox.yml \
     --become \
