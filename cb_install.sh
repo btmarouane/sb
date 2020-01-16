@@ -75,4 +75,4 @@ fi
 run_cmd bash -H $CB_PATH/cb_dep.sh $VERBOSE_OPT
 
 # Clone Cloudbox Repo
-run_cmd bash -H $CB_PATH/cb_repo.sh $VERBOSE_OPT
+run_cmd bash -H $CB_PATH/cb_repo.sh -b develop $VERBOSE_OPT
