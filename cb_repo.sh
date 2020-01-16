@@ -20,7 +20,7 @@ while getopts 'v' f; do
 	esac
 done
 
-$VERBOSE || exec >/dev/null
+$VERBOSE || exec &>/dev/null
 
 ## Clone Cloudbox and pull latest commit
 if [ -d "$CLOUDBOX_PATH" ]; then

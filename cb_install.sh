@@ -11,6 +11,7 @@
 
 ## Variables
 VERBOSE=false
+VERBOSE_OPT=""
 CB_REPO="https://github.com/Cloudbox/cb.git"
 CB_PATH="/srv/git/cb"
 CB_INSTALL_SCRIPT="$CB_PATH/cb_install.sh"
@@ -28,12 +29,14 @@ run_cmd () {
 }
 
 while getopts 'v' f; do
-	case $f in
-	v)	VERBOSE=true;;
-	esac
+  case $f in
+  v)  VERBOSE=true
+      VERBOSE_OPT="-v"
+  ;;
+  esac
 done
 
-$VERBOSE || exec >/dev/null
+$VERBOSE || exec &>/dev/null
 
 # Install git
 run_cmd apt-get install -y git
@@ -69,7 +72,7 @@ if [ "$SCRIPT_PATH" != "$CB_INSTALL_SCRIPT" ]; then
 fi
 
 # Install Cloudbox Dependencies
-run_cmd bash -H $CB_PATH/cb_dep.sh "$@"
+run_cmd bash -H $CB_PATH/cb_dep.sh $VERBOSE_OPT
 
 # Clone Cloudbox Repo
-run_cmd bash -H $CB_PATH/cb_repo.sh "$@"
+run_cmd bash -H $CB_PATH/cb_repo.sh $VERBOSE_OPT

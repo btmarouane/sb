@@ -32,7 +32,7 @@ while getopts 'v' f; do
 	esac
 done
 
-$VERBOSE || exec >/dev/null
+$VERBOSE || exec &>/dev/null
 
 ## Disable IPv6
 if [ -f "$SYSCTL_PATH" ]; then
