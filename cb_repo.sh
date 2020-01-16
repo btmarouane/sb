@@ -11,11 +11,13 @@
 
 ## Variables
 VERBOSE=false
+BRANCH='master'
 CLOUDBOX_PATH="/srv/git/cloudbox"
 CLOUDBOX_REPO="https://github.com/cloudbox/cloudbox.git"
 
-while getopts 'v' f; do
+while getopts ':b:v' f; do
 	case $f in
+	b)	BRANCH=$OPTARG;;
 	v)	VERBOSE=true;;
 	esac
 done
@@ -27,8 +29,8 @@ if [ -d "$CLOUDBOX_PATH" ]; then
     if [ -d "$CLOUDBOX_PATH/.git" ]; then
         cd "$CLOUDBOX_PATH"
         git fetch --all --prune
-        git checkout develop
-        git reset --hard origin/develop
+        git checkout -f $BRANCH
+        git reset --hard origin/$BRANCH
         git submodule update --init --recursive
     else
         cd "$CLOUDBOX_PATH"
@@ -36,8 +38,8 @@ if [ -d "$CLOUDBOX_PATH" ]; then
         git init
         git remote add origin "$CLOUDBOX_REPO"
         git fetch --all --prune
-        git branch master origin/develop
-        git reset --hard origin/develop
+        git branch $BRANCH origin/$BRANCH
+        git reset --hard origin/$BRANCH
         git submodule update --init --recursive
     fi
 else
