@@ -15,11 +15,28 @@ BRANCH='master'
 CLOUDBOX_PATH="/srv/git/cloudbox"
 CLOUDBOX_REPO="https://github.com/cloudbox/cloudbox.git"
 
-while getopts ':b:v' f; do
-	case $f in
-	b)	BRANCH=$OPTARG;;
-	v)	VERBOSE=true;;
-	esac
+usage () {
+    echo "Usage:"
+    echo "    cb_repo -b <branch>    Repo branch to use. Default is 'master'."
+    echo "    cb_repo -v             Enable Verbose Mode."
+    echo "    cb_repo -h             Display this help message."
+}
+
+while getopts ':b:v:h' f; do
+    case $f in
+    b)  BRANCH=$OPTARG;;
+    v)  VERBOSE=true;;
+    h)
+        usage
+        exit 0
+        ;;
+    \?)
+        echo "Invalid Option: -$OPTARG" 1>&2
+        echo ""
+        usage
+        exit 1
+        ;;
+    esac
 done
 
 $VERBOSE || exec &>/dev/null
