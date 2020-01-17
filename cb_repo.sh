@@ -9,11 +9,18 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 
-## Variables
+################################
+# Variables
+################################
+
 VERBOSE=false
 BRANCH='master'
 CLOUDBOX_PATH="/srv/git/cloudbox"
 CLOUDBOX_REPO="https://github.com/cloudbox/cloudbox.git"
+
+################################
+# Functions
+################################
 
 usage () {
     echo "Usage:"
@@ -21,6 +28,10 @@ usage () {
     echo "    cb_repo -v             Enable Verbose Mode."
     echo "    cb_repo -h             Display this help message."
 }
+
+################################
+# Argument Parser
+################################
 
 while getopts ':b:v:h' f; do
     case $f in
@@ -38,6 +49,10 @@ while getopts ':b:v:h' f; do
         ;;
     esac
 done
+
+################################
+# Main
+################################
 
 $VERBOSE || exec &>/dev/null
 

@@ -10,10 +10,12 @@
 #                     GNU General Public License v3.0                           #
 #################################################################################
 
-## Variables
+################################
+# Variables
+################################
+
 VERBOSE=false
 
-## Constants
 readonly SYSCTL_PATH="/etc/sysctl.conf"
 readonly APT_SOURCES_URL="https://raw.githubusercontent.com/cloudbox/cb/master/apt-sources"
 readonly PYTHON_CMD_SUFFIX="-m pip install \
@@ -26,11 +28,19 @@ readonly PYTHON2_CMD="python $PYTHON_CMD_SUFFIX"
 readonly PIP="9.0.3"
 readonly ANSIBLE=">=2.8,<2.9"
 
+################################
+# Argument Parser
+################################
+
 while getopts 'v' f; do
 	case $f in
 	v)	VERBOSE=true;;
 	esac
 done
+
+################################
+# Main
+################################
 
 $VERBOSE || exec &>/dev/null
 

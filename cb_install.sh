@@ -9,7 +9,10 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 
-## Variables
+################################
+# Variables
+################################
+
 VERBOSE=false
 VERBOSE_OPT=""
 CB_REPO="https://github.com/Cloudbox/cb.git"
@@ -17,7 +20,9 @@ CB_PATH="/srv/git/cb"
 CB_INSTALL_SCRIPT="$CB_PATH/cb_install.sh"
 SCRIPT_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/$(basename "${BASH_SOURCE[0]}")"
 
-$VERBOSE && echo "Script Path: " $SCRIPT_PATH
+################################
+# Functions
+################################
 
 run_cmd () {
   if $VERBOSE; then
@@ -28,6 +33,10 @@ run_cmd () {
   fi
 }
 
+################################
+# Argument Parser
+################################
+
 while getopts 'v' f; do
   case $f in
   v)  VERBOSE=true
@@ -36,7 +45,13 @@ while getopts 'v' f; do
   esac
 done
 
+################################
+# Main
+################################
+
 $VERBOSE || exec &>/dev/null
+
+$VERBOSE && echo "Script Path: " $SCRIPT_PATH
 
 # Install git
 run_cmd apt-get install -y git
