@@ -11,6 +11,18 @@
 #################################################################################
 
 ################################
+# Privilege Escalation
+################################
+
+# Restart script in SUDO
+# https://unix.stackexchange.com/a/28793
+
+if [ $EUID != 0 ]; then
+    sudo "$0" "$@"
+    exit $?
+fi
+
+################################
 # Variables
 ################################
 
@@ -33,9 +45,9 @@ readonly ANSIBLE=">=2.8,<2.9"
 ################################
 
 while getopts 'v' f; do
-	case $f in
-	v)	VERBOSE=true;;
-	esac
+    case $f in
+    v)	VERBOSE=true;;
+    esac
 done
 
 ################################
