@@ -9,6 +9,10 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 
+################################
+# Privilege Escalation
+################################
+
 # Restart script in SUDO
 # https://unix.stackexchange.com/a/28793
 
@@ -52,19 +56,16 @@ git_fetch_and_reset () {
 
 run_playbook_cb () {
 
-    local tags skip_tags
-
-    tags="--tags $1"
-    [[ ! -z "$2" ]] && skip_tags="--skip-tags $2"
+    local arguments="$@"
 
     echo "" > "${CLOUDBOX_LOGFILE_PATH}"
 
     cd "${CLOUDBOX_REPO_PATH}"
+
     "${ANSIBLE_PLAYBOOK_BINARY_PATH}" \
-      "${CLOUDBOX_PLAYBOOK_PATH}" \
-      --become \
-      ${skip_tags} \
-      ${tags}
+        "${CLOUDBOX_PLAYBOOK_PATH}" \
+        --become \
+        ${arguments}
 
     cd - >/dev/null
 
@@ -72,19 +73,15 @@ run_playbook_cb () {
 
 run_playbook_cm () {
 
-    local tags skip_tags
-
-    tags="--tags $1"
-    [[ ! -z "$2" ]] && skip_tags="--skip-tags $2"
+    local arguments="$@"
 
     echo "" > "${COMMUNITY_LOGFILE_PATH}"
 
     cd "${COMMUNITY_REPO_PATH}"
     "${ANSIBLE_PLAYBOOK_BINARY_PATH}" \
-      "${COMMUNITY_PLAYBOOK_PATH}" \
-      --become \
-      ${skip_tags} \
-      ${tags}
+        "${COMMUNITY_PLAYBOOK_PATH}" \
+        --become \
+        ${arguments}
 
     cd - >/dev/null
 
@@ -92,45 +89,95 @@ run_playbook_cm () {
 
 install () {
 
-    # Variables
     local arg=("$@")
-    declare tags
-    local tags_cb
-    local skip_tags_cb="settings"
-    local tags_cm
-    local skip_tags_cm="settings"
 
-    # Build Tag Arrays
-    tags=(${arg//,/ })
+    # Remove space after comma
+    arg_clean=$(sed -e 's/, /,/g' <<< "$arg")
+
+    # Split tags from extra arguments
+    # https://stackoverflow.com/a/10520842
+    re="^(\S+)\s+(-.*)?$"
+    if [[ "$arg_clean" =~ $re ]]; then
+        tags_arg="${BASH_REMATCH[1]}"
+        extra_arg="${BASH_REMATCH[2]}"
+    else
+        tags_arg="$arg_clean"
+    fi
+
+    # Save tags into 'tags' array
+    tags_tmp=(${tags_arg//,/ })
+
+    # Remove duplicate entries from array
+    # https://stackoverflow.com/a/31736999
+    readarray -t tags < <(printf '%s\n' "${tags_tmp[@]}" | awk '!x[$0]++')
+
+    # Build CB/CM tag arrays
+    local tags_cb
+    local tags_cm
+    local skip_settings_in_cb=true
+    local skip_settings_in_cm=true
+
     for i in "${!tags[@]}"
     do
         if [[ ${tags[i]} == cm-* ]]; then
             tags_cm="${tags_cm}${tags_cm:+,}${tags[i]##cm-}"
 
             if [[ "${tags[i]##cm-}" =~ "settings" ]]; then
-                skip_tags_cm=""
+                skip_settings_in_cm=false
             fi
         else
             tags_cb="${tags_cb}${tags_cb:+,}${tags[i]}"
 
             if [[ "${tags[i]}" =~ "settings" ]]; then
-                skip_tags_cb=""
+                skip_settings_in_cb=false
             fi
         fi
     done
 
-    # Run Cloudbox Ansible Playbook
+    # Cloudbox Ansible Playbook
     if [[ ! -z "$tags_cb" ]]; then
-        echo "Running Cloudbox Tags: "$tags_cb
+
+        # Build arguments
+        local arguments_cb="--tags $tags_cb"
+
+        if [ "$skip_settings_in_cb" = true ]; then
+            arguments_cb="${arguments_cb} --skip-tags settings"
+        fi
+
+        if [[ ! -z "$extra_arg" ]]; then
+            arguments_cb="${arguments_cb} ${extra_arg}"
+        fi
+
+        # Run playbook
         echo ""
-        run_playbook_cb $tags_cb $skip_tags_cb
+        echo "Running Cloudbox Tags: "${tags_cb//,/,  }
+        echo ""
+        run_playbook_cb $arguments_cb
+        echo ""
+
     fi
 
-    # Run Community Ansible Playbook
+    # Community Ansible Playbook
     if [[ ! -z "$tags_cm" ]]; then
-        echo "Running Community Tags: "$tags_cm
+
+        # Build arguments
+        local arguments_cm="--tags $tags_cm"
+
+        if [ "$skip_settings_in_cm" = true ]; then
+            arguments_cm="${arguments_cm} --skip-tags settings"
+        fi
+
+        if [[ ! -z "$extra_arg" ]]; then
+            arguments_cm="${arguments_cm} ${extra_arg}"
+        fi
+
+        # Run playbook
+        echo "========================="
         echo ""
-        run_playbook_cm $tags_cm $skip_tags_cm
+        echo "Running Community Tags: "${tags_cm//,/,  }
+        echo ""
+        run_playbook_cm $arguments_cm
+        echo ""
     fi
 
 }
@@ -166,7 +213,7 @@ update () {
         fi
     done
 
-    $config_files_are_changed && run_playbook_cb "settings" && echo -e '\n'
+    $config_files_are_changed && run_playbook_cb "--tags settings" && echo -e '\n'
 
     echo -e "Updating Complete."
 
