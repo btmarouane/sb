@@ -219,48 +219,60 @@ update () {
 
 }
 
+usage () {
+    echo "Usage:"
+    echo "    cb [-h]                Display this help message."
+    echo "    cb install <package>   Install <package>."
+    echo "    cb update              Update Cloudbox project folder."
+}
+
 ################################
 # Argument Parser
 ################################
 
+# https://sookocheff.com/post/bash/parsing-bash-script-arguments-with-shopts/
+
 roles=""  # Default to empty role
 target=""  # Default to empty target
 
-# Parse options to the `cb` command
+# Parse options
 while getopts ":h" opt; do
   case ${opt} in
-    h )
-      echo "Usage:"
-      echo "    cb -h                  Display this help message."
-      echo "    cb install <package>   Install <package>."
-      echo "    cb update              Update Cloudbox project folder."
-
-      exit 0
-      ;;
-   \? )
-     echo "Invalid Option: -$OPTARG" 1>&2
-     exit 1
+    h)
+        usage
+        exit 0
+        ;;
+   \?)
+        echo "Invalid Option: -$OPTARG" 1>&2
+        echo ""
+        usage
+        exit 1
      ;;
   esac
 done
 shift $((OPTIND -1))
 
-
+# Parse commands
 subcommand=$1; shift  # Remove 'cb' from the argument list
 case "$subcommand" in
 
   # Parse options to the various sub commands
-
-  update)
-    update
-    ;;
-
-  install)
-    roles=${@}
-    install "${roles}"
-    ;;
-
-  *)
-    echo "hello"
-    ;;
+    update)
+        update
+        ;;
+    install)
+        roles=${@}
+        install "${roles}"
+        ;;
+    "") echo "A command is required."
+        echo ""
+        usage
+        exit 1
+        ;;
+    *)
+        echo "Invalid Command: ${@}" 1>&2
+        echo ""
+        usage
+        exit 1
+        ;;
 esac
