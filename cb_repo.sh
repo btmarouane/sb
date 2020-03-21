@@ -75,7 +75,7 @@ if [ -d "$CLOUDBOX_PATH" ]; then
         git submodule update --init --recursive
     fi
 else
-    git clone "$CLOUDBOX_REPO" "$CLOUDBOX_PATH"
+    git clone -b $BRANCH "$CLOUDBOX_REPO" "$CLOUDBOX_PATH"
     cd "$CLOUDBOX_PATH"
     git submodule update --init --recursive
 fi
