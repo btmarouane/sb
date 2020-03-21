@@ -33,7 +33,7 @@ usage () {
 # Argument Parser
 ################################
 
-while getopts ':b:v:h' f; do
+while getopts ':b:vh' f; do
     case $f in
     b)  BRANCH=$OPTARG;;
     v)  VERBOSE=true;;
@@ -56,6 +56,8 @@ done
 
 $VERBOSE || exec &>/dev/null
 
+$VERBOSE && echo "git branch selected: "$BRANCH
+
 ## Clone Cloudbox and pull latest commit
 if [ -d "$CLOUDBOX_PATH" ]; then
     if [ -d "$CLOUDBOX_PATH/.git" ]; then
@@ -64,6 +66,7 @@ if [ -d "$CLOUDBOX_PATH" ]; then
         git checkout -f $BRANCH
         git reset --hard origin/$BRANCH
         git submodule update --init --recursive
+        $VERBOSE && echo "git branch: "$(git rev-parse --abbrev-ref HEAD)
     else
         cd "$CLOUDBOX_PATH"
         rm -rf library/
@@ -73,11 +76,13 @@ if [ -d "$CLOUDBOX_PATH" ]; then
         git branch $BRANCH origin/$BRANCH
         git reset --hard origin/$BRANCH
         git submodule update --init --recursive
+        $VERBOSE && echo "git branch: "$(git rev-parse --abbrev-ref HEAD)
     fi
 else
     git clone -b $BRANCH "$CLOUDBOX_REPO" "$CLOUDBOX_PATH"
     cd "$CLOUDBOX_PATH"
     git submodule update --init --recursive
+    $VERBOSE && echo "git branch: "$(git rev-parse --abbrev-ref HEAD)
 fi
 
 ## Copy settings and config files into Cloudbox folder
