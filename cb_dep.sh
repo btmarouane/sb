@@ -114,6 +114,7 @@ apt-get install -y --reinstall \
     libffi-dev \
     python3-dev \
     python3-pip \
+    python3-apt \
     python-dev \
     python-pip \
     python-apt
@@ -126,7 +127,9 @@ $PYTHON3_CMD \
 $PYTHON3_CMD \
     pyOpenSSL \
     requests \
-    netaddr
+    netaddr \
+    jmespath \
+    ansible$ANSIBLE
 
 ## Install pip2 Dependencies
 $PYTHON2_CMD \
@@ -137,8 +140,7 @@ $PYTHON2_CMD \
     pyOpenSSL \
     requests \
     netaddr \
-    jmespath \
-    ansible$ANSIBLE
+    jmespath
 
 ## Copy /usr/local/bin/pip to /usr/bin/pip
 [ -f /usr/local/bin/pip ] && cp /usr/local/bin/pip /usr/bin/pip
