@@ -63,7 +63,7 @@ fi
 
 # Clone CB repo
 run_cmd mkdir -p /srv/git
-run_cmd git clone --branch develop_python3 "${CB_REPO}" "$CB_PATH"
+run_cmd git clone --branch develop "${CB_REPO}" "$CB_PATH"
 
 # Set chmod +x on script files
 run_cmd chmod +x $CB_PATH/*.sh
@@ -90,4 +90,4 @@ fi
 run_cmd bash -H $CB_PATH/cb_dep_python3.sh $VERBOSE_OPT
 
 # Clone Cloudbox Repo
-run_cmd bash -H $CB_PATH/cb_repo.sh -b develop $VERBOSE_OPT
+run_cmd bash -H $CB_PATH/cb_repo.sh -b develop_python3 $VERBOSE_OPT
