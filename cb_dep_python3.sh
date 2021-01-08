@@ -36,6 +36,7 @@ readonly PYTHON_CMD_SUFFIX="-m pip install \
                               --upgrade \
                               --force-reinstall"
 readonly PYTHON3_CMD="python3 $PYTHON_CMD_SUFFIX"
+readonly PIP="9.0.3"
 readonly ANSIBLE=">=2.9,<2.10"
 
 ################################
@@ -105,7 +106,7 @@ apt-get install -y --reinstall \
 
 ## Install pip3 Dependencies
 $PYTHON3_CMD \
-    pip
+    pip==${PIP}
 $PYTHON3_CMD \
     setuptools
 $PYTHON3_CMD \
