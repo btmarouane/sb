@@ -114,8 +114,8 @@ install () {
     # Build CB/CM tag arrays
     local tags_cb
     local tags_cm
-    local skip_settings_in_cb=false
-    local skip_settings_in_cm=false
+    local skip_settings_in_cb=true
+    local skip_settings_in_cm=true
 
     for i in "${!tags[@]}"
     do
