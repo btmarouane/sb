@@ -37,7 +37,7 @@ readonly PYTHON_CMD_SUFFIX="-m pip install \
                               --force-reinstall"
 readonly PYTHON3_CMD="python3 $PYTHON_CMD_SUFFIX"
 readonly PIP="9.0.3"
-readonly ANSIBLE=">=2.9,<2.10"
+readonly ANSIBLE=">=2.10,<2.11"
 
 ################################
 # Argument Parser
