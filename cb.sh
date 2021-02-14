@@ -51,7 +51,7 @@ git_fetch_and_reset () {
     git clean --quiet -df >/dev/null
     git reset --quiet --hard @{u} >/dev/null
     git submodule update --init --recursive
-    chmod 775 -R /srv/git/cloudbox
+    chmod 664 -R /srv/git/cloudbox
 }
 
 run_playbook_cb () {
