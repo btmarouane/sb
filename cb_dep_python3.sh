@@ -36,7 +36,7 @@ readonly PYTHON_CMD_SUFFIX="-m pip install \
                               --upgrade \
                               --force-reinstall"
 readonly PYTHON3_CMD="python3 $PYTHON_CMD_SUFFIX"
-readonly PIP="9.0.3"
+readonly PIP="21.0.1"
 readonly ANSIBLE=">=2.10,<2.11"
 
 ################################
