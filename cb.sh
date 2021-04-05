@@ -47,7 +47,7 @@ git_fetch_and_reset () {
     git fetch --quiet >/dev/null
     git clean --quiet -df >/dev/null
     git reset --quiet --hard @{u} >/dev/null
-    git checkout --quiet develop >/dev/null
+    git checkout --quiet develop_python3 >/dev/null
     git clean --quiet -df >/dev/null
     git reset --quiet --hard @{u} >/dev/null
     git submodule update --init --recursive

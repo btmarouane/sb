@@ -1,7 +1,7 @@
 #!/bin/sh
 #################################################################################
 # Title:         Cloudbox: Dependencies Installer                               #
-# Author(s):     L3uddz, Desimaniac, EnorMOZ                                    #
+# Author(s):     L3uddz, Desimaniac, EnorMOZ, salty                             #
 # URL:           https://github.com/Cloudbox/Cloudbox                           #
 # Description:   Installs dependencies needed for Cloudbox.                     #
 # --                                                                            #
@@ -33,12 +33,10 @@ readonly APT_SOURCES_URL="https://raw.githubusercontent.com/cloudbox/cb/master/a
 readonly PYTHON_CMD_SUFFIX="-m pip install \
                               --no-cache-dir \
                               --disable-pip-version-check \
-                              --upgrade \
-                              --force-reinstall"
+                              --upgrade"
 readonly PYTHON3_CMD="python3 $PYTHON_CMD_SUFFIX"
-readonly PYTHON2_CMD="python $PYTHON_CMD_SUFFIX"
-readonly PIP="9.0.3"
-readonly ANSIBLE=">=2.9,<2.10"
+readonly PIP="21.0.1"
+readonly ANSIBLE=">=2.10,<2.11"
 
 ################################
 # Argument Parser
@@ -58,22 +56,11 @@ $VERBOSE || exec &>/dev/null
 
 ## Disable IPv6
 if [ -f "$SYSCTL_PATH" ]; then
-    if [[ $(lsb_release -rs) < 18.04 ]]; then
-        ## Add 'Disable IPv6' entries into systctl
-        grep -q -F 'net.ipv6.conf.all.disable_ipv6 = 1' "$SYSCTL_PATH" || \
-            echo 'net.ipv6.conf.all.disable_ipv6 = 1' >> "$SYSCTL_PATH"
-        grep -q -F 'net.ipv6.conf.default.disable_ipv6 = 1' "$SYSCTL_PATH" || \
-            echo 'net.ipv6.conf.default.disable_ipv6 = 1' >> "$SYSCTL_PATH"
-        grep -q -F 'net.ipv6.conf.lo.disable_ipv6 = 1' "$SYSCTL_PATH" || \
-            echo 'net.ipv6.conf.lo.disable_ipv6 = 1' >> "$SYSCTL_PATH"
-        sysctl -p
-    else
-        ## Remove 'Disable IPv6' entries from systctl
-        sed -i -e '/^net.ipv6.conf.all.disable_ipv6/d' "$SYSCTL_PATH"
-        sed -i -e '/^net.ipv6.conf.default.disable_ipv6/d' "$SYSCTL_PATH"
-        sed -i -e '/^net.ipv6.conf.lo.disable_ipv6/d' "$SYSCTL_PATH"
-        sysctl -p
-    fi
+    ## Remove 'Disable IPv6' entries from systctl
+    sed -i -e '/^net.ipv6.conf.all.disable_ipv6/d' "$SYSCTL_PATH"
+    sed -i -e '/^net.ipv6.conf.default.disable_ipv6/d' "$SYSCTL_PATH"
+    sed -i -e '/^net.ipv6.conf.lo.disable_ipv6/d' "$SYSCTL_PATH"
+    sysctl -p
 fi
 
 ## AppVeyor
@@ -83,7 +70,7 @@ if [ "$SUDO_USER" = "appveyor" ]; then
     if [[$(lsb_release -cs) == "bionic" ]]; then
         APT_SOURCES_URL="$APT_SOURCES_URL/bionic.txt"
     else
-        APT_SOURCES_URL="$APT_SOURCES_URL/xenial.txt"
+        APT_SOURCES_URL="$APT_SOURCES_URL/focal.txt"
     fi
     curl $APT_SOURCES_URL | tee /etc/apt/sources.list
     apt-get update
@@ -114,10 +101,7 @@ apt-get install -y --reinstall \
     libffi-dev \
     python3-dev \
     python3-pip \
-    python3-apt \
-    python-dev \
-    python-pip \
-    python-apt
+    python3-apt
 
 ## Install pip3 Dependencies
 $PYTHON3_CMD \
@@ -131,17 +115,5 @@ $PYTHON3_CMD \
     jmespath \
     ansible$ANSIBLE
 
-## Install pip2 Dependencies
-$PYTHON2_CMD \
-    pip==${PIP}
-$PYTHON2_CMD \
-    setuptools
-$PYTHON2_CMD \
-    pyOpenSSL \
-    requests \
-    netaddr \
-    jmespath
-
 ## Copy /usr/local/bin/pip to /usr/bin/pip
-[ -f /usr/local/bin/pip ] && cp /usr/local/bin/pip /usr/bin/pip
 [ -f /usr/local/bin/pip3 ] && cp /usr/local/bin/pip3 /usr/bin/pip3
