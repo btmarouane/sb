@@ -26,7 +26,7 @@ fi
 # Variables
 ################################
 
-VERBOSE=false
+VERBOSE=true
 
 readonly SYSCTL_PATH="/etc/sysctl.conf"
 readonly PYTHON_CMD_SUFFIX="-m pip install \
