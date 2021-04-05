@@ -17,7 +17,7 @@
 # Restart script in SUDO
 # https://unix.stackexchange.com/a/28793
 
-if [ $EUID != 0 ]; then
+if [ "$EUID" != 0 ]; then
     sudo "$0" "$@"
     exit $?
 fi
@@ -29,7 +29,6 @@ fi
 VERBOSE=false
 
 readonly SYSCTL_PATH="/etc/sysctl.conf"
-readonly APT_SOURCES_URL="https://raw.githubusercontent.com/cloudbox/cb/master/apt-sources"
 readonly PYTHON_CMD_SUFFIX="-m pip install \
                               --no-cache-dir \
                               --disable-pip-version-check \
@@ -61,19 +60,6 @@ if [ -f "$SYSCTL_PATH" ]; then
     sed -i -e '/^net.ipv6.conf.default.disable_ipv6/d' "$SYSCTL_PATH"
     sed -i -e '/^net.ipv6.conf.lo.disable_ipv6/d' "$SYSCTL_PATH"
     sysctl -p
-fi
-
-## AppVeyor
-if [ "$SUDO_USER" = "appveyor" ]; then
-    rm /etc/apt/sources.list.d/*
-    rm /etc/apt/sources.list
-    if [[$(lsb_release -cs) == "bionic" ]]; then
-        APT_SOURCES_URL="$APT_SOURCES_URL/bionic.txt"
-    else
-        APT_SOURCES_URL="$APT_SOURCES_URL/focal.txt"
-    fi
-    curl $APT_SOURCES_URL | tee /etc/apt/sources.list
-    apt-get update
 fi
 
 ## Environmental Variables
