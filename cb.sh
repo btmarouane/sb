@@ -22,6 +22,13 @@ if [ $EUID != 0 ]; then
 fi
 
 ################################
+# Scripts
+################################
+
+source yaml.sh
+create_variables /srv/git/cloudbox/accounts.yml
+
+################################
 # Variables
 ################################
 
@@ -52,6 +59,7 @@ git_fetch_and_reset () {
     git reset --quiet --hard @{u} >/dev/null
     git submodule update --init --recursive
     chmod 664 /srv/git/cloudbox/ansible.cfg
+    chown -R "${user_name}":"${user_name}" "${CLOUDBOX_REPO_PATH}"
 }
 
 run_playbook_cb () {
