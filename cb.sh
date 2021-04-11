@@ -25,7 +25,7 @@ fi
 # Scripts
 ################################
 
-source yaml.sh
+source /srv/git/cb/yaml.sh
 create_variables /srv/git/cloudbox/accounts.yml
 
 ################################
