@@ -15,7 +15,7 @@
 
 VERBOSE=false
 VERBOSE_OPT=""
-CB_REPO="https://github.com/Cloudbox/cb.git"
+CB_REPO="https://github.com/Cloudbox2/cb.git"
 CB_PATH="/srv/git/cb"
 CB_INSTALL_SCRIPT="$CB_PATH/cb_install.sh"
 SCRIPT_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/$(basename "${BASH_SOURCE[0]}")"
@@ -63,7 +63,7 @@ fi
 
 # Clone CB repo
 run_cmd mkdir -p /srv/git
-run_cmd git clone --branch develop_python3 "${CB_REPO}" "$CB_PATH"
+run_cmd git clone --branch master "${CB_REPO}" "$CB_PATH"
 
 # Set chmod +x on script files
 run_cmd chmod +x $CB_PATH/*.sh
@@ -90,4 +90,4 @@ fi
 run_cmd bash -H $CB_PATH/cb_dep.sh $VERBOSE_OPT
 
 # Clone Cloudbox Repo
-run_cmd bash -H $CB_PATH/cb_repo.sh -b develop_python3 $VERBOSE_OPT
+run_cmd bash -H $CB_PATH/cb_repo.sh -b master $VERBOSE_OPT
