@@ -16,7 +16,7 @@
 VERBOSE=false
 BRANCH='master'
 CLOUDBOX_PATH="/srv/git/cloudbox"
-CLOUDBOX_REPO="https://github.com/cloudbox/cloudbox.git"
+CLOUDBOX_REPO="https://github.com/cloudbox2/cloudbox.git"
 
 ################################
 # Functions
