@@ -29,6 +29,7 @@ VERBOSE=true
 
 readonly SYSCTL_PATH="/etc/sysctl.conf"
 readonly PYTHON_CMD_SUFFIX="-m pip install \
+                              --timeout=120 \
                               --no-cache-dir \
                               --disable-pip-version-check \
                               --upgrade"
