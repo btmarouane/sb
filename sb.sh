@@ -34,7 +34,7 @@ create_variables /srv/git/saltbox/accounts.yml
 #Ansible
 ANSIBLE_PLAYBOOK_BINARY_PATH="/usr/local/bin/ansible-playbook"
 
-# Cloudbox
+# Saltbox
 SALTBOX_REPO_PATH="/srv/git/saltbox"
 SALTBOX_PLAYBOOK_PATH="$SALTBOX_REPO_PATH/saltbox.yml"
 SALTBOX_LOGFILE_PATH="$SALTBOX_REPO_PATH/saltbox.log"
