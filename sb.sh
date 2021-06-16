@@ -1,10 +1,9 @@
 #!/bin/bash
 #########################################################################
-# Title:         Cloudbox: CB Script                                    #
+# Title:         Saltbox: SB Script                                     #
 # Author(s):     desimaniac, chazlarson                                 #
-# URL:           https://github.com/cloudbox/cb                         #
+# URL:           https://github.com/saltyorg/sb                         #
 # --                                                                    #
-#         Part of the Cloudbox project: https://cloudbox.works          #
 #########################################################################
 #                   GNU General Public License v3.0                     #
 #########################################################################
@@ -25,8 +24,8 @@ fi
 # Scripts
 ################################
 
-source /srv/git/cb/yaml.sh
-create_variables /srv/git/cloudbox/accounts.yml
+source /srv/git/sb/yaml.sh
+create_variables /srv/git/saltbox/accounts.yml
 
 ################################
 # Variables
@@ -36,9 +35,9 @@ create_variables /srv/git/cloudbox/accounts.yml
 ANSIBLE_PLAYBOOK_BINARY_PATH="/usr/local/bin/ansible-playbook"
 
 # Cloudbox
-CLOUDBOX_REPO_PATH="/srv/git/cloudbox"
-CLOUDBOX_PLAYBOOK_PATH="$CLOUDBOX_REPO_PATH/cloudbox.yml"
-CLOUDBOX_LOGFILE_PATH="$CLOUDBOX_REPO_PATH/cloudbox.log"
+SALTBOX_REPO_PATH="/srv/git/saltbox"
+SALTBOX_PLAYBOOK_PATH="$SALTBOX_REPO_PATH/saltbox.yml"
+SALTBOX_LOGFILE_PATH="$SALTBOX_REPO_PATH/saltbox.log"
 
 # Community
 COMMUNITY_REPO_PATH="/opt/community"
@@ -58,20 +57,20 @@ git_fetch_and_reset () {
     git clean --quiet -df >/dev/null
     git reset --quiet --hard @{u} >/dev/null
     git submodule update --init --recursive
-    chmod 664 /srv/git/cloudbox/ansible.cfg
-    chown -R "${user_name}":"${user_name}" "${CLOUDBOX_REPO_PATH}"
+    chmod 664 /srv/git/saltbox/ansible.cfg
+    chown -R "${user_name}":"${user_name}" "${SALTBOX_REPO_PATH}"
 }
 
-run_playbook_cb () {
+run_playbook_sb () {
 
     local arguments="$@"
 
-    echo "" > "${CLOUDBOX_LOGFILE_PATH}"
+    echo "" > "${SALTBOX_LOGFILE_PATH}"
 
-    cd "${CLOUDBOX_REPO_PATH}"
+    cd "${SALTBOX_REPO_PATH}"
 
     "${ANSIBLE_PLAYBOOK_BINARY_PATH}" \
-        "${CLOUDBOX_PLAYBOOK_PATH}" \
+        "${SALTBOX_PLAYBOOK_PATH}" \
         --become \
         ${arguments}
 
@@ -119,10 +118,10 @@ install () {
     # https://stackoverflow.com/a/31736999
     readarray -t tags < <(printf '%s\n' "${tags_tmp[@]}" | awk '!x[$0]++')
 
-    # Build CB/CM tag arrays
-    local tags_cb
+    # Build SB/CM tag arrays
+    local tags_sb
     local tags_cm
-    local skip_settings_in_cb=true
+    local skip_settings_in_sb=true
     local skip_settings_in_cm=true
 
     for i in "${!tags[@]}"
@@ -134,33 +133,33 @@ install () {
                 skip_settings_in_cm=false
             fi
         else
-            tags_cb="${tags_cb}${tags_cb:+,}${tags[i]}"
+            tags_sb="${tags_sb}${tags_sb:+,}${tags[i]}"
 
             if [[ "${tags[i]}" =~ "settings" ]]; then
-                skip_settings_in_cb=false
+                skip_settings_in_sb=false
             fi
         fi
     done
 
-    # Cloudbox Ansible Playbook
-    if [[ ! -z "$tags_cb" ]]; then
+    # Saltbox Ansible Playbook
+    if [[ ! -z "$tags_sb" ]]; then
 
         # Build arguments
-        local arguments_cb="--tags $tags_cb"
+        local arguments_sb="--tags $tags_sb"
 
-        if [ "$skip_settings_in_cb" = true ]; then
-            arguments_cb="${arguments_cb} --skip-tags settings"
+        if [ "$skip_settings_in_sb" = true ]; then
+            arguments_sb="${arguments_sb} --skip-tags settings"
         fi
 
         if [[ ! -z "$extra_arg" ]]; then
-            arguments_cb="${arguments_cb} ${extra_arg}"
+            arguments_sb="${arguments_sb} ${extra_arg}"
         fi
 
         # Run playbook
         echo ""
-        echo "Running Cloudbox Tags: "${tags_cb//,/,  }
+        echo "Running Saltbox Tags: "${tags_sb//,/,  }
         echo ""
-        run_playbook_cb $arguments_cb
+        run_playbook_sb $arguments_sb
         echo ""
 
     fi
@@ -197,9 +196,9 @@ update () {
     config_files=('accounts' 'settings' 'adv_settings' 'backup_config')
     config_files_are_changed=false
 
-    echo -e "Updating Cloudbox...\n"
+    echo -e "Updating Saltbox...\n"
 
-    cd "${CLOUDBOX_REPO_PATH}"
+    cd "${SALTBOX_REPO_PATH}"
 
     # Get Git Object IDs for config files
     for file in "${config_files[@]}"; do
@@ -221,7 +220,7 @@ update () {
         fi
     done
 
-    $config_files_are_changed && run_playbook_cb "--tags settings" && echo -e '\n'
+    $config_files_are_changed && run_playbook_sb "--tags settings" && echo -e '\n'
 
     echo -e "Updating Complete."
 
@@ -229,9 +228,9 @@ update () {
 
 usage () {
     echo "Usage:"
-    echo "    cb [-h]                Display this help message."
-    echo "    cb install <package>   Install <package>."
-    echo "    cb update              Update Cloudbox project folder."
+    echo "    sb [-h]                Display this help message."
+    echo "    sb install <package>   Install <package>."
+    echo "    sb update              Update Saltbox project folder."
 }
 
 ################################

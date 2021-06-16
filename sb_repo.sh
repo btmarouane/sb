@@ -1,10 +1,9 @@
 #!/bin/bash
 #########################################################################
-# Title:         Cloudbox Repo Cloner Script                            #
+# Title:         Saltbox Repo Cloner Script                             #
 # Author(s):     desimaniac                                             #
-# URL:           https://github.com/cloudbox/cb                         #
+# URL:           https://github.com/saltyorg/sb                         #
 # --                                                                    #
-#         Part of the Cloudbox project: https://cloudbox.works          #
 #########################################################################
 #                   GNU General Public License v3.0                     #
 #########################################################################
@@ -15,8 +14,8 @@
 
 VERBOSE=false
 BRANCH='master'
-CLOUDBOX_PATH="/srv/git/cloudbox"
-CLOUDBOX_REPO="https://github.com/cloudbox2/cloudbox.git"
+SALTBOX_PATH="/srv/git/saltbox"
+SALTBOX_REPO="https://github.com/saltyorg/saltbox.git"
 
 ################################
 # Functions
@@ -24,9 +23,9 @@ CLOUDBOX_REPO="https://github.com/cloudbox2/cloudbox.git"
 
 usage () {
     echo "Usage:"
-    echo "    cb_repo -b <branch>    Repo branch to use. Default is 'master'."
-    echo "    cb_repo -v             Enable Verbose Mode."
-    echo "    cb_repo -h             Display this help message."
+    echo "    sb_repo -b <branch>    Repo branch to use. Default is 'master'."
+    echo "    sb_repo -v             Enable Verbose Mode."
+    echo "    sb_repo -h             Display this help message."
 }
 
 ################################
@@ -58,20 +57,20 @@ $VERBOSE || exec &>/dev/null
 
 $VERBOSE && echo "git branch selected: "$BRANCH
 
-## Clone Cloudbox and pull latest commit
-if [ -d "$CLOUDBOX_PATH" ]; then
-    if [ -d "$CLOUDBOX_PATH/.git" ]; then
-        cd "$CLOUDBOX_PATH"
+## Clone Saltbox and pull latest commit
+if [ -d "$SALTBOX_PATH" ]; then
+    if [ -d "$SALTBOX_PATH/.git" ]; then
+        cd "$SALTBOX_PATH"
         git fetch --all --prune
         git checkout -f $BRANCH
         git reset --hard origin/$BRANCH
         git submodule update --init --recursive
         $VERBOSE && echo "git branch: "$(git rev-parse --abbrev-ref HEAD)
     else
-        cd "$CLOUDBOX_PATH"
+        cd "$SALTBOX_PATH"
         rm -rf library/
         git init
-        git remote add origin "$CLOUDBOX_REPO"
+        git remote add origin "$SALTBOX_REPO"
         git fetch --all --prune
         git branch $BRANCH origin/$BRANCH
         git reset --hard origin/$BRANCH
@@ -79,17 +78,17 @@ if [ -d "$CLOUDBOX_PATH" ]; then
         $VERBOSE && echo "git branch: "$(git rev-parse --abbrev-ref HEAD)
     fi
 else
-    git clone -b $BRANCH "$CLOUDBOX_REPO" "$CLOUDBOX_PATH"
-    cd "$CLOUDBOX_PATH"
+    git clone -b $BRANCH "$SALTBOX_REPO" "$SALTBOX_PATH"
+    cd "$SALTBOX_PATH"
     git submodule update --init --recursive
     $VERBOSE && echo "git branch: "$(git rev-parse --abbrev-ref HEAD)
 fi
 
-## Copy settings and config files into Cloudbox folder
+## Copy settings and config files into Saltbox folder
 shopt -s nullglob
-for i in "$CLOUDBOX_PATH"/defaults/*.default; do
-    if [ ! -f "$CLOUDBOX_PATH/$(basename "${i%.*}")" ]; then
-        cp -n "${i}" "$CLOUDBOX_PATH/$(basename "${i%.*}")"
+for i in "$SALTBOX_PATH"/defaults/*.default; do
+    if [ ! -f "$SALTBOX_PATH/$(basename "${i%.*}")" ]; then
+        cp -n "${i}" "$SALTBOX_PATH/$(basename "${i%.*}")"
     fi
 done
 shopt -u nullglob

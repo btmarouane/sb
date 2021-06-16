@@ -1,10 +1,9 @@
 #!/bin/bash
 #########################################################################
-# Title:         Cloudbox Install Script                                #
+# Title:         Saltbox Install Script                                 #
 # Author(s):     desimaniac                                             #
-# URL:           https://github.com/cloudbox/cb                         #
+# URL:           https://github.com/saltyorg/sb                         #
 # --                                                                    #
-#         Part of the Cloudbox project: https://cloudbox.works          #
 #########################################################################
 #                   GNU General Public License v3.0                     #
 #########################################################################
@@ -15,9 +14,9 @@
 
 VERBOSE=false
 VERBOSE_OPT=""
-CB_REPO="https://github.com/Cloudbox2/cb.git"
-CB_PATH="/srv/git/cb"
-CB_INSTALL_SCRIPT="$CB_PATH/cb_install.sh"
+SB_REPO="https://github.com/saltyorg/sb.git"
+SB_PATH="/srv/git/sb"
+SB_INSTALL_SCRIPT="$SB_PATH/sb_install.sh"
 SCRIPT_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/$(basename "${BASH_SOURCE[0]}")"
 
 ################################
@@ -57,23 +56,23 @@ $VERBOSE && echo "Script Path: " $SCRIPT_PATH
 run_cmd apt-get install -y git
 
 # Remove existing repo folder
-if [ -d "$CB_PATH" ]; then
-    run_cmd rm -rf $CB_PATH;
+if [ -d "$SB_PATH" ]; then
+    run_cmd rm -rf $SB_PATH;
 fi
 
-# Clone CB repo
+# Clone SB repo
 run_cmd mkdir -p /srv/git
-run_cmd git clone --branch master "${CB_REPO}" "$CB_PATH"
+run_cmd git clone --branch master "${SB_REPO}" "$SB_PATH"
 
 # Set chmod +x on script files
-run_cmd chmod +x $CB_PATH/*.sh
+run_cmd chmod +x $SB_PATH/*.sh
 
 $VERBOSE && echo "Script Path: "$SCRIPT_PATH
-$VERBOSE && echo "CB Install Path: "$CB_INSTALL_SCRIPT
+$VERBOSE && echo "SB Install Path: "$CB_INSTALL_SCRIPT
 
 ## Create script symlinks in /usr/local/bin
 shopt -s nullglob
-for i in "$CB_PATH"/*.sh; do
+for i in "$SB_PATH"/*.sh; do
     if [ ! -f "/usr/local/bin/$(basename "${i%.*}")" ]; then
         run_cmd ln -s "${i}" "/usr/local/bin/$(basename "${i%.*}")"
     fi
@@ -81,13 +80,13 @@ done
 shopt -u nullglob
 
 # Relaunch script from new location
-if [ "$SCRIPT_PATH" != "$CB_INSTALL_SCRIPT" ]; then
-    bash -H "$CB_INSTALL_SCRIPT" "$@"
+if [ "$SCRIPT_PATH" != "$SB_INSTALL_SCRIPT" ]; then
+    bash -H "$SB_INSTALL_SCRIPT" "$@"
     exit $?
 fi
 
-# Install Cloudbox Dependencies
-run_cmd bash -H $CB_PATH/cb_dep.sh $VERBOSE_OPT
+# Install Saltbox Dependencies
+run_cmd bash -H $SB_PATH/sb_dep.sh $VERBOSE_OPT
 
-# Clone Cloudbox Repo
-run_cmd bash -H $CB_PATH/cb_repo.sh -b master $VERBOSE_OPT
+# Clone Saltbox Repo
+run_cmd bash -H $SB_PATH/sb_repo.sh -b master $VERBOSE_OPT

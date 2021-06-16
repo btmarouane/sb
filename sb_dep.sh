@@ -1,11 +1,10 @@
 #!/bin/sh
 #################################################################################
-# Title:         Cloudbox: Dependencies Installer                               #
+# Title:         Saltbox: Dependencies Installer                                #
 # Author(s):     L3uddz, Desimaniac, EnorMOZ, salty                             #
-# URL:           https://github.com/Cloudbox/Cloudbox                           #
+# URL:           https://github.com/saltyorg/sb                                 #
 # Description:   Installs dependencies needed for Cloudbox.                     #
 # --                                                                            #
-#             Part of the Cloudbox project: https://cloudbox.works              #
 #################################################################################
 #                     GNU General Public License v3.0                           #
 #################################################################################
