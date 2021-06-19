@@ -1,7 +1,7 @@
 #!/bin/bash
 #########################################################################
 # Title:         Saltbox Install Script                                 #
-# Author(s):     desimaniac, salty                                      #
+# Author(s):     desimaniac, saltydk                                    #
 # URL:           https://github.com/saltyorg/sb                         #
 # --                                                                    #
 #########################################################################

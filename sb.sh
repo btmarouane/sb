@@ -1,7 +1,7 @@
 #!/bin/bash
 #########################################################################
 # Title:         Saltbox: SB Script                                     #
-# Author(s):     desimaniac, chazlarson, salty                          #
+# Author(s):     desimaniac, chazlarson, saltydk                        #
 # URL:           https://github.com/saltyorg/sb                         #
 # --                                                                    #
 #########################################################################

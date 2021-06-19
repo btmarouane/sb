@@ -1,7 +1,7 @@
 #!/bin/sh
 #################################################################################
 # Title:         Saltbox: Dependencies Installer                                #
-# Author(s):     L3uddz, Desimaniac, EnorMOZ, salty                             #
+# Author(s):     L3uddz, Desimaniac, EnorMOZ, saltydk                           #
 # URL:           https://github.com/saltyorg/sb                                 #
 # Description:   Installs dependencies needed for Saltbox.                      #
 # --                                                                            #
