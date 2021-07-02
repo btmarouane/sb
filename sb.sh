@@ -61,6 +61,19 @@ git_fetch_and_reset () {
     chown -R "${user_name}":"${user_name}" "${SALTBOX_REPO_PATH}"
 }
 
+git_fetch_and_reset_community () {
+
+    git fetch --quiet >/dev/null
+    git clean --quiet -df >/dev/null
+    git reset --quiet --hard @{u} >/dev/null
+    git checkout --quiet master >/dev/null
+    git clean --quiet -df >/dev/null
+    git reset --quiet --hard @{u} >/dev/null
+    git submodule update --init --recursive
+    chmod 664 /opt/community/ansible.cfg
+    chown -R "${user_name}":"${user_name}" "${COMMUNITY_REPO_PATH}"
+}
+
 run_playbook_sb () {
 
     local arguments="$@"
@@ -226,11 +239,49 @@ update () {
 
 }
 
+cm-update () {
+
+    declare -A old_object_ids
+    declare -A new_object_ids
+    config_files=('telly' 'settings' 'hetzner_nfs')
+    config_files_are_changed=false
+
+    echo -e "Updating Community...\n"
+
+    cd "${COMMUNITY_REPO_PATH}"
+
+    # Get Git Object IDs for config files
+    for file in "${config_files[@]}"; do
+        old_object_ids["$file"]=$(git hash-object defaults/"$file".yml.default)
+    done
+
+    git_fetch_and_reset_community
+
+    # Get Git Object IDs for config files
+    for file in "${config_files[@]}"; do
+        new_object_ids["$file"]=$(git hash-object defaults/"$file".yml.default)
+    done
+
+    # Compare Git Object IDs
+    for file in "${config_files[@]}"; do
+        if [ ${old_object_ids[$file]} != ${new_object_ids[$file]} ]; then
+            config_files_are_changed=true
+            break
+        fi
+    done
+
+    $config_files_are_changed && run_playbook_cm "--tags settings" && echo -e '\n'
+
+    echo -e "Updating Complete."
+
+}
+
 usage () {
     echo "Usage:"
     echo "    sb [-h]                Display this help message."
     echo "    sb install <package>   Install <package>."
     echo "    sb update              Update Saltbox project folder."
+    echo "    sb cm-update           Update Community project folder."
 }
 
 ################################
@@ -266,6 +317,9 @@ case "$subcommand" in
   # Parse options to the various sub commands
     update)
         update
+        ;;
+    cm-update)
+        cm-update
         ;;
     install)
         roles=${@}
