@@ -77,6 +77,18 @@ git_fetch_and_reset_community () {
     chown -R "${user_name}":"${user_name}" "${COMMUNITY_REPO_PATH}"
 }
 
+git_fetch_and_reset_sb () {
+
+    git fetch --quiet >/dev/null
+    git clean --quiet -df >/dev/null
+    git reset --quiet --hard @{u} >/dev/null
+    git checkout --quiet master >/dev/null
+    git clean --quiet -df >/dev/null
+    git reset --quiet --hard @{u} >/dev/null
+    git submodule update --init --recursive
+    chmod 775 /srv/git/sb/sb.sh
+}
+
 run_playbook_sb () {
 
     local arguments="$@"
@@ -285,7 +297,7 @@ sb-update () {
 
     cd "${SB_REPO_PATH}"
 
-    git_fetch_and_reset_community
+    git_fetch_and_reset_sb
 
     echo -e "Updating Complete."
 
