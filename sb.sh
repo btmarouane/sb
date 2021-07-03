@@ -206,7 +206,7 @@ update () {
 
     declare -A old_object_ids
     declare -A new_object_ids
-    config_files=('accounts' 'settings' 'adv_settings' 'backup_config')
+    config_files=('accounts.yml.default' 'settings.yml.default' 'adv_settings.yml.default' 'backup_config.yml.default' 'ansible.cfg.default')
     config_files_are_changed=false
 
     echo -e "Updating Saltbox...\n"
@@ -215,14 +215,14 @@ update () {
 
     # Get Git Object IDs for config files
     for file in "${config_files[@]}"; do
-        old_object_ids["$file"]=$(git hash-object defaults/"$file".yml.default)
+        old_object_ids["$file"]=$(git hash-object defaults/"$file")
     done
 
     git_fetch_and_reset
 
     # Get Git Object IDs for config files
     for file in "${config_files[@]}"; do
-        new_object_ids["$file"]=$(git hash-object defaults/"$file".yml.default)
+        new_object_ids["$file"]=$(git hash-object defaults/"$file")
     done
 
     # Compare Git Object IDs
@@ -243,7 +243,7 @@ cm-update () {
 
     declare -A old_object_ids
     declare -A new_object_ids
-    config_files=('telly' 'settings' 'hetzner_nfs')
+    config_files=('telly.yml.default' 'settings.yml.default' 'hetzner_nfs.yml.default' 'ansible.cfg.default')
     config_files_are_changed=false
 
     echo -e "Updating Community...\n"
@@ -252,14 +252,14 @@ cm-update () {
 
     # Get Git Object IDs for config files
     for file in "${config_files[@]}"; do
-        old_object_ids["$file"]=$(git hash-object defaults/"$file".yml.default)
+        old_object_ids["$file"]=$(git hash-object defaults/"$file")
     done
 
     git_fetch_and_reset_community
 
     # Get Git Object IDs for config files
     for file in "${config_files[@]}"; do
-        new_object_ids["$file"]=$(git hash-object defaults/"$file".yml.default)
+        new_object_ids["$file"]=$(git hash-object defaults/"$file")
     done
 
     # Compare Git Object IDs
