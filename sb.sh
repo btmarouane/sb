@@ -44,6 +44,9 @@ COMMUNITY_REPO_PATH="/opt/community"
 COMMUNITY_PLAYBOOK_PATH="$COMMUNITY_REPO_PATH/community.yml"
 COMMUNITY_LOGFILE_PATH="$COMMUNITY_REPO_PATH/community.log"
 
+# SB
+SB_REPO_PATH="/srv/git/sb"
+
 ################################
 # Functions
 ################################
@@ -276,12 +279,25 @@ cm-update () {
 
 }
 
+sb-update () {
+
+    echo -e "Updating sb...\n"
+
+    cd "${SB_REPO_PATH}"
+
+    git_fetch_and_reset_community
+
+    echo -e "Updating Complete."
+
+}
+
 usage () {
     echo "Usage:"
     echo "    sb [-h]                Display this help message."
     echo "    sb install <package>   Install <package>."
     echo "    sb update              Update Saltbox project folder."
     echo "    sb cm-update           Update Community project folder."
+    echo "    sb sb-update           Update this tool."
 }
 
 ################################
@@ -311,7 +327,7 @@ done
 shift $((OPTIND -1))
 
 # Parse commands
-subcommand=$1; shift  # Remove 'cb' from the argument list
+subcommand=$1; shift  # Remove 'sb' from the argument list
 case "$subcommand" in
 
   # Parse options to the various sub commands
@@ -320,6 +336,9 @@ case "$subcommand" in
         ;;
     cm-update)
         cm-update
+        ;;
+    sb-update)
+        sb-update
         ;;
     install)
         roles=${@}
