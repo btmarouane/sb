@@ -87,6 +87,7 @@ apt-get install -y --reinstall \
     libffi-dev \
     python3-dev \
     python3-pip \
+    python3-testresources \
     python3-apt
 
 ## Install pip3 Dependencies
