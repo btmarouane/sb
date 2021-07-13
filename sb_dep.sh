@@ -34,7 +34,6 @@ readonly PYTHON_CMD_SUFFIX="-m pip install \
                               --disable-pip-version-check \
                               --upgrade"
 readonly PYTHON3_CMD="python3 $PYTHON_CMD_SUFFIX"
-readonly PIP="21.1.3"
 readonly ANSIBLE=">=4.0.0,<5.0.0"
 
 ################################
@@ -92,7 +91,7 @@ apt-get install -y --reinstall \
 
 ## Install pip3 Dependencies
 $PYTHON3_CMD \
-    pip==${PIP}
+    pip
 $PYTHON3_CMD \
     setuptools
 $PYTHON3_CMD \
