@@ -250,7 +250,7 @@ update () {
 
     $config_files_are_changed && run_playbook_sb "--tags settings" && echo -e '\n'
 
-    echo -e "Updating Complete."
+    echo -e "Update Completed."
 
 }
 
@@ -287,7 +287,7 @@ cm-update () {
 
     $config_files_are_changed && run_playbook_cm "--tags settings" && echo -e '\n'
 
-    echo -e "Updating Complete."
+    echo -e "Update Completed."
 
 }
 
@@ -299,7 +299,7 @@ sb-update () {
 
     git_fetch_and_reset_sb
 
-    echo -e "Updating Complete."
+    echo -e "Update Completed. Run the previous command again."
 
 }
 
@@ -309,8 +309,24 @@ usage () {
     echo "    sb install <package>   Install <package>."
     echo "    sb update              Update Saltbox project folder."
     echo "    sb cm-update           Update Community project folder."
-    echo "    sb sb-update           Update this tool."
 }
+
+################################
+# Update check
+################################
+
+cd "${SB_REPO_PATH}"
+
+git fetch
+HEADHASH=$(git rev-parse HEAD)
+UPSTREAMHASH=$(git rev-parse master@{upstream})
+
+if [ "$HEADHASH" != "$UPSTREAMHASH" ]
+then
+ echo -e Not up to date with origin. Updating.
+ sb-update
+ exit 0
+fi
 
 ################################
 # Argument Parser
@@ -348,9 +364,6 @@ case "$subcommand" in
         ;;
     cm-update)
         cm-update
-        ;;
-    sb-update)
-        sb-update
         ;;
     install)
         roles=${@}
