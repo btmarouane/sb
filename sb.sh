@@ -303,10 +303,47 @@ sb-update () {
 
 }
 
+sb-list ()  {
+
+    echo -e "Saltbox tags:\n"
+
+    cd "${SALTBOX_REPO_PATH}"
+
+    "${ANSIBLE_PLAYBOOK_BINARY_PATH}" \
+        "${SALTBOX_PLAYBOOK_PATH}" \
+        --become \
+        --list-tags 2>&1 | grep "TASK TAGS" | cut -d":" -f2 | awk '{sub(/\[/, "")sub(/\]/, "")}1' | cut -c2-
+
+    echo -e "\n"
+
+    cd - >/dev/null
+}
+
+cm-list () {
+
+    echo -e "Community tags (prepend cm-):\n"
+
+    cd "${COMMUNITY_REPO_PATH}"
+    "${ANSIBLE_PLAYBOOK_BINARY_PATH}" \
+        "${COMMUNITY_PLAYBOOK_PATH}" \
+        --become \
+        --list-tags 2>&1 | grep "TASK TAGS" | cut -d":" -f2 | awk '{sub(/\[/, "")sub(/\]/, "")}1' | cut -c2-
+
+    echo -e "\n"
+
+    cd - >/dev/null
+}
+
+list () {
+    sb-list
+    cm-list
+}
+
 usage () {
     echo "Usage:"
     echo "    sb [-h]                Display this help message."
     echo "    sb install <package>   Install <package>."
+    echo "    sb list                List packages."
     echo "    sb update              Update Saltbox project folder."
     echo "    sb cm-update           Update Community project folder."
 }
@@ -359,6 +396,9 @@ subcommand=$1; shift  # Remove 'sb' from the argument list
 case "$subcommand" in
 
   # Parse options to the various sub commands
+    list)
+        list
+        ;;
     update)
         update
         ;;
