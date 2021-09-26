@@ -312,7 +312,7 @@ sb-list ()  {
     "${ANSIBLE_PLAYBOOK_BINARY_PATH}" \
         "${SALTBOX_PLAYBOOK_PATH}" \
         --become \
-        --list-tags --skip-tags "sanity_check" 2>&1 | grep "TASK TAGS" | cut -d":" -f2 | awk '{sub(/\[/, "")sub(/\]/, "")}1' | cut -c2-
+        --list-tags --skip-tags "always" 2>&1 | grep "TASK TAGS" | cut -d":" -f2 | awk '{sub(/\[/, "")sub(/\]/, "")}1' | cut -c2-
 
     echo -e "\n"
 
@@ -327,7 +327,7 @@ cm-list () {
     "${ANSIBLE_PLAYBOOK_BINARY_PATH}" \
         "${COMMUNITY_PLAYBOOK_PATH}" \
         --become \
-        --list-tags --skip-tags "sanity_check" 2>&1 | grep "TASK TAGS" | cut -d":" -f2 | awk '{sub(/\[/, "")sub(/\]/, "")}1' | cut -c2-
+        --list-tags --skip-tags "always,sanity_check" 2>&1 | grep "TASK TAGS" | cut -d":" -f2 | awk '{sub(/\[/, "")sub(/\]/, "")}1' | cut -c2-
 
     echo -e "\n"
 
