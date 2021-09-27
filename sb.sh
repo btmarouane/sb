@@ -341,10 +341,9 @@ list () {
 
 usage () {
     echo "Usage:"
-    echo "    sb [-h]                Display this help message."
+    echo "    sb update              Update Saltbox."
+    echo "    sb list                List Saltbox packages."
     echo "    sb install <package>   Install <package>."
-    echo "    sb list                List packages."
-    echo "    sb update              Update Saltbox project folder."
 }
 
 ################################
