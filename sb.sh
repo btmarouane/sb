@@ -345,7 +345,6 @@ usage () {
     echo "    sb install <package>   Install <package>."
     echo "    sb list                List packages."
     echo "    sb update              Update Saltbox project folder."
-    echo "    sb cm-update           Update Community project folder."
 }
 
 ################################
