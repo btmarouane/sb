@@ -401,8 +401,6 @@ case "$subcommand" in
         ;;
     update)
         update
-        ;;
-    cm-update)
         cm-update
         ;;
     install)
