@@ -52,6 +52,9 @@ $VERBOSE || exec &>/dev/null
 
 $VERBOSE && echo "Script Path: " $SCRIPT_PATH
 
+# Update apt cache
+run_cmd apt-get update
+
 # Install git
 run_cmd apt-get install -y git
 
