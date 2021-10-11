@@ -253,7 +253,7 @@ sb-update () {
 
     git_fetch_and_reset_sb
 
-    echo -e "Update Completed. Run the previous command again."
+#    echo -e "Update Completed. Run the previous command again."
 
 }
 
@@ -314,6 +314,7 @@ if [ "$HEADHASH" != "$UPSTREAMHASH" ]
 then
  echo -e Not up to date with origin. Updating.
  sb-update
+ sudo "$0" "$@"
  exit 0
 fi
 
