@@ -253,6 +253,8 @@ sb-update () {
 
     git_fetch_and_reset_sb
 
+    echo -e "Update Completed."
+
 }
 
 sb-list ()  {
