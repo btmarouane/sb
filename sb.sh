@@ -312,6 +312,7 @@ if [ "$HEADHASH" != "$UPSTREAMHASH" ]
 then
  echo -e Not up to date with origin. Updating.
  sb-update
+ echo -e Relaunching with previous arguments.
  sudo "$0" "$@"
  exit 0
 fi
