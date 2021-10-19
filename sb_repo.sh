@@ -92,3 +92,7 @@ for i in "$SALTBOX_PATH"/defaults/*.default; do
     fi
 done
 shopt -u nullglob
+
+## Activate Git Hooks
+cd "$SALTBOX_PATH"
+bash "$SALTBOX_PATH"/bin/git/init-hooks
