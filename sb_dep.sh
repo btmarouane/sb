@@ -85,9 +85,13 @@ apt-get install -y --reinstall \
     libssl-dev \
     libffi-dev \
     python3-dev \
-    python3-pip \
     python3-testresources \
     python3-apt
+
+## Install pip3
+cd /tmp
+curl -sLO https://bootstrap.pypa.io/get-pip.py
+python3 get-pip.py
 
 ## Install pip3 Dependencies
 $PYTHON3_CMD \
