@@ -86,7 +86,8 @@ apt-get install -y --reinstall \
     libffi-dev \
     python3-dev \
     python3-testresources \
-    python3-apt
+    python3-apt \
+    python3-virtualenv
 
 ## Install pip3
 cd /tmp
