@@ -87,7 +87,8 @@ apt-get install -y --reinstall \
     python3-dev \
     python3-testresources \
     python3-apt \
-    python3-virtualenv
+    python3-virtualenv \
+    python3-venv
 
 ## Install pip3
 cd /tmp
