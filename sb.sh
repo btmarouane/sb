@@ -1,7 +1,7 @@
 #!/bin/bash
 #########################################################################
 # Title:         Saltbox: SB Script                                     #
-# Author(s):     desimaniac, chazlarson, saltydk                        #
+# Author(s):     desimaniac, chazlarson, salty                          #
 # URL:           https://github.com/saltyorg/sb                         #
 # --                                                                    #
 #########################################################################
@@ -55,12 +55,13 @@ git_fetch_and_reset () {
 
     git fetch --quiet >/dev/null
     git clean --quiet -df >/dev/null
-    git reset --quiet --hard @{u} >/dev/null
+    git reset --quiet --hard "@{u}" >/dev/null
     git checkout --quiet master >/dev/null
     git clean --quiet -df >/dev/null
-    git reset --quiet --hard @{u} >/dev/null
+    git reset --quiet --hard "@{u}" >/dev/null
     git submodule update --init --recursive
     chmod 664 /srv/git/saltbox/ansible.cfg
+    # shellcheck disable=SC2154
     chown -R "${user_name}":"${user_name}" "${SALTBOX_REPO_PATH}"
 }
 
@@ -68,10 +69,10 @@ git_fetch_and_reset_community () {
 
     git fetch --quiet >/dev/null
     git clean --quiet -df >/dev/null
-    git reset --quiet --hard @{u} >/dev/null
+    git reset --quiet --hard "@{u}" >/dev/null
     git checkout --quiet master >/dev/null
     git clean --quiet -df >/dev/null
-    git reset --quiet --hard @{u} >/dev/null
+    git reset --quiet --hard "@{u}" >/dev/null
     git submodule update --init --recursive
     chmod 664 /opt/community/ansible.cfg
     chown -R "${user_name}":"${user_name}" "${COMMUNITY_REPO_PATH}"
@@ -81,52 +82,57 @@ git_fetch_and_reset_sb () {
 
     git fetch --quiet >/dev/null
     git clean --quiet -df >/dev/null
-    git reset --quiet --hard @{u} >/dev/null
+    git reset --quiet --hard "@{u}" >/dev/null
     git checkout --quiet master >/dev/null
     git clean --quiet -df >/dev/null
-    git reset --quiet --hard @{u} >/dev/null
+    git reset --quiet --hard "@{u}" >/dev/null
     git submodule update --init --recursive
     chmod 775 /srv/git/sb/sb.sh
 }
 
 run_playbook_sb () {
 
-    local arguments="$@"
+    local arguments=$*
 
     echo "" > "${SALTBOX_LOGFILE_PATH}"
 
-    cd "${SALTBOX_REPO_PATH}"
+    cd "${SALTBOX_REPO_PATH}" || exit
 
+    # shellcheck disable=SC2086
     "${ANSIBLE_PLAYBOOK_BINARY_PATH}" \
         "${SALTBOX_PLAYBOOK_PATH}" \
         --become \
         ${arguments}
 
-    cd - >/dev/null
+    cd - >/dev/null || exit
 
 }
 
 run_playbook_cm () {
 
-    local arguments="$@"
+    local arguments=$*
 
     echo "" > "${COMMUNITY_LOGFILE_PATH}"
 
-    cd "${COMMUNITY_REPO_PATH}"
+    cd "${COMMUNITY_REPO_PATH}" || exit
+
+    # shellcheck disable=SC2086
     "${ANSIBLE_PLAYBOOK_BINARY_PATH}" \
         "${COMMUNITY_PLAYBOOK_PATH}" \
         --become \
         ${arguments}
 
-    cd - >/dev/null
+    cd - >/dev/null || exit
 
 }
 
 install () {
 
     local arg=("$@")
+    echo "${arg[*]}"
 
     # Remove space after comma
+    # shellcheck disable=SC2128,SC2001
     arg_clean=$(sed -e 's/, /,/g' <<< "$arg")
 
     # Split tags from extra arguments
@@ -140,6 +146,7 @@ install () {
     fi
 
     # Save tags into 'tags' array
+    # shellcheck disable=SC2206
     tags_tmp=(${tags_arg//,/ })
 
     # Remove duplicate entries from array
@@ -170,7 +177,7 @@ install () {
     done
 
     # Saltbox Ansible Playbook
-    if [[ ! -z "$tags_sb" ]]; then
+    if [[ -n "$tags_sb" ]]; then
 
         # Build arguments
         local arguments_sb="--tags $tags_sb"
@@ -179,21 +186,21 @@ install () {
             arguments_sb="${arguments_sb} --skip-tags settings"
         fi
 
-        if [[ ! -z "$extra_arg" ]]; then
+        if [[ -n "$extra_arg" ]]; then
             arguments_sb="${arguments_sb} ${extra_arg}"
         fi
 
         # Run playbook
         echo ""
-        echo "Running Saltbox Tags: "${tags_sb//,/,  }
+        echo "Running Saltbox Tags: ${tags_sb//,/,  }"
         echo ""
-        run_playbook_sb $arguments_sb
+        run_playbook_sb "$arguments_sb"
         echo ""
 
     fi
 
     # Community Ansible Playbook
-    if [[ ! -z "$tags_cm" ]]; then
+    if [[ -n "$tags_cm" ]]; then
 
         # Build arguments
         local arguments_cm="--tags $tags_cm"
@@ -202,16 +209,16 @@ install () {
             arguments_cm="${arguments_cm} --skip-tags settings"
         fi
 
-        if [[ ! -z "$extra_arg" ]]; then
+        if [[ -n "$extra_arg" ]]; then
             arguments_cm="${arguments_cm} ${extra_arg}"
         fi
 
         # Run playbook
         echo "========================="
         echo ""
-        echo "Running Community Tags: "${tags_cm//,/,  }
+        echo "Running Community Tags: ${tags_cm//,/,  }"
         echo ""
-        run_playbook_cm $arguments_cm
+        run_playbook_cm "$arguments_cm"
         echo ""
     fi
 
@@ -221,7 +228,7 @@ update () {
 
     echo -e "Updating Saltbox...\n"
 
-    cd "${SALTBOX_REPO_PATH}"
+    cd "${SALTBOX_REPO_PATH}" || exit
 
     git_fetch_and_reset
 
@@ -235,7 +242,7 @@ cm-update () {
 
     echo -e "Updating Community...\n"
 
-    cd "${COMMUNITY_REPO_PATH}"
+    cd "${COMMUNITY_REPO_PATH}" || exit
 
     git_fetch_and_reset_community
 
@@ -249,7 +256,7 @@ sb-update () {
 
     echo -e "Updating sb...\n"
 
-    cd "${SB_REPO_PATH}"
+    cd "${SB_REPO_PATH}" || exit
 
     git_fetch_and_reset_sb
 
@@ -261,7 +268,7 @@ sb-list ()  {
 
     echo -e "Saltbox tags:\n"
 
-    cd "${SALTBOX_REPO_PATH}"
+    cd "${SALTBOX_REPO_PATH}" || exit
 
     "${ANSIBLE_PLAYBOOK_BINARY_PATH}" \
         "${SALTBOX_PLAYBOOK_PATH}" \
@@ -270,14 +277,14 @@ sb-list ()  {
 
     echo -e "\n"
 
-    cd - >/dev/null
+    cd - >/dev/null || exit
 }
 
 cm-list () {
 
     echo -e "Community tags (prepend cm-):\n"
 
-    cd "${COMMUNITY_REPO_PATH}"
+    cd "${COMMUNITY_REPO_PATH}" || exit
     "${ANSIBLE_PLAYBOOK_BINARY_PATH}" \
         "${COMMUNITY_PLAYBOOK_PATH}" \
         --become \
@@ -285,7 +292,7 @@ cm-list () {
 
     echo -e "\n"
 
-    cd - >/dev/null
+    cd - >/dev/null || exit
 }
 
 list () {
@@ -304,11 +311,11 @@ usage () {
 # Update check
 ################################
 
-cd "${SB_REPO_PATH}"
+cd "${SB_REPO_PATH}" || exit
 
 git fetch
 HEADHASH=$(git rev-parse HEAD)
-UPSTREAMHASH=$(git rev-parse master@{upstream})
+UPSTREAMHASH=$(git rev-parse "master@{upstream}")
 
 if [ "$HEADHASH" != "$UPSTREAMHASH" ]
 then
@@ -326,7 +333,7 @@ fi
 # https://sookocheff.com/post/bash/parsing-bash-script-arguments-with-shopts/
 
 roles=""  # Default to empty role
-target=""  # Default to empty target
+#target=""  # Default to empty target
 
 # Parse options
 while getopts ":h" opt; do
@@ -358,7 +365,7 @@ case "$subcommand" in
         cm-update
         ;;
     install)
-        roles=${@}
+        roles=${*}
         install "${roles}"
         ;;
     "") echo "A command is required."
@@ -367,7 +374,7 @@ case "$subcommand" in
         exit 1
         ;;
     *)
-        echo "Invalid Command: ${@}" 1>&2
+        echo "Invalid Command: $subcommand"
         echo ""
         usage
         exit 1

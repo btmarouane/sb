@@ -1,7 +1,7 @@
 #!/bin/bash
 #########################################################################
 # Title:         Saltbox Repo Cloner Script                             #
-# Author(s):     desimaniac, saltydk                                    #
+# Author(s):     desimaniac, salty                                      #
 # URL:           https://github.com/saltyorg/sb                         #
 # --                                                                    #
 #########################################################################
@@ -55,33 +55,38 @@ done
 
 $VERBOSE || exec &>/dev/null
 
-$VERBOSE && echo "git branch selected: "$BRANCH
+$VERBOSE && echo "git branch selected: $BRANCH"
 
 ## Clone Saltbox and pull latest commit
 if [ -d "$SALTBOX_PATH" ]; then
     if [ -d "$SALTBOX_PATH/.git" ]; then
-        cd "$SALTBOX_PATH"
+        cd "$SALTBOX_PATH" || exit
         git fetch --all --prune
+        # shellcheck disable=SC2086
         git checkout -f $BRANCH
+        # shellcheck disable=SC2086
         git reset --hard origin/$BRANCH
         git submodule update --init --recursive
-        $VERBOSE && echo "git branch: "$(git rev-parse --abbrev-ref HEAD)
+        $VERBOSE && echo "git branch: $(git rev-parse --abbrev-ref HEAD)"
     else
-        cd "$SALTBOX_PATH"
+        cd "$SALTBOX_PATH" || exit
         rm -rf library/
         git init
         git remote add origin "$SALTBOX_REPO"
         git fetch --all --prune
+        # shellcheck disable=SC2086
         git branch $BRANCH origin/$BRANCH
+        # shellcheck disable=SC2086
         git reset --hard origin/$BRANCH
         git submodule update --init --recursive
-        $VERBOSE && echo "git branch: "$(git rev-parse --abbrev-ref HEAD)
+        $VERBOSE && echo "git branch: $(git rev-parse --abbrev-ref HEAD)"
     fi
 else
+    # shellcheck disable=SC2086
     git clone -b $BRANCH "$SALTBOX_REPO" "$SALTBOX_PATH"
-    cd "$SALTBOX_PATH"
+    cd "$SALTBOX_PATH" || exit
     git submodule update --init --recursive
-    $VERBOSE && echo "git branch: "$(git rev-parse --abbrev-ref HEAD)
+    $VERBOSE && echo "git branch: $(git rev-parse --abbrev-ref HEAD)"
 fi
 
 ## Copy settings and config files into Saltbox folder
@@ -94,5 +99,5 @@ done
 shopt -u nullglob
 
 ## Activate Git Hooks
-cd "$SALTBOX_PATH"
+cd "$SALTBOX_PATH" || exit
 bash "$SALTBOX_PATH"/bin/git/init-hooks

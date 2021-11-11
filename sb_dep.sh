@@ -1,7 +1,7 @@
-#!/bin/sh
+#!/bin/bash
 #################################################################################
 # Title:         Saltbox: Dependencies Installer                                #
-# Author(s):     L3uddz, Desimaniac, EnorMOZ, saltydk                           #
+# Author(s):     L3uddz, Desimaniac, EnorMOZ, salty                             #
 # URL:           https://github.com/saltyorg/sb                                 #
 # Description:   Installs dependencies needed for Saltbox.                      #
 # --                                                                            #
@@ -91,7 +91,7 @@ apt-get install -y --reinstall \
     python3-venv
 
 ## Install pip3
-cd /tmp
+cd /tmp || exit
 curl -sLO https://bootstrap.pypa.io/get-pip.py
 python3 get-pip.py
 

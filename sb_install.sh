@@ -1,7 +1,7 @@
 #!/bin/bash
 #########################################################################
 # Title:         Saltbox Install Script                                 #
-# Author(s):     desimaniac, saltydk                                    #
+# Author(s):     desimaniac, salty                                      #
 # URL:           https://github.com/saltyorg/sb                         #
 # --                                                                    #
 #########################################################################
@@ -50,7 +50,7 @@ done
 
 $VERBOSE || exec &>/dev/null
 
-$VERBOSE && echo "Script Path: " $SCRIPT_PATH
+$VERBOSE && echo "Script Path: $SCRIPT_PATH"
 
 # Update apt cache
 run_cmd apt-get update
@@ -70,8 +70,8 @@ run_cmd git clone --branch master "${SB_REPO}" "$SB_PATH"
 # Set chmod +x on script files
 run_cmd chmod +x $SB_PATH/*.sh
 
-$VERBOSE && echo "Script Path: "$SCRIPT_PATH
-$VERBOSE && echo "SB Install Path: "$CB_INSTALL_SCRIPT
+$VERBOSE && echo "Script Path: $SCRIPT_PATH"
+$VERBOSE && echo "SB Install Path: "$SB_INSTALL_SCRIPT
 
 ## Create script symlinks in /usr/local/bin
 shopt -s nullglob
