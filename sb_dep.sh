@@ -40,6 +40,7 @@ readonly ANSIBLE=">=4.0.0,<5.0.0"
 # Argument Parser
 ################################
 
+# shellcheck disable=SC2220
 while getopts 'v' f; do
     case $f in
     v)	VERBOSE=true;;
