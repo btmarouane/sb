@@ -156,23 +156,15 @@ install () {
     # Build SB/CM tag arrays
     local tags_sb
     local tags_cm
-    local skip_settings_in_sb=true
-    local skip_settings_in_cm=true
 
     for i in "${!tags[@]}"
     do
         if [[ ${tags[i]} == cm-* ]]; then
             tags_cm="${tags_cm}${tags_cm:+,}${tags[i]##cm-}"
 
-            if [[ "${tags[i]##cm-}" =~ "settings" ]]; then
-                skip_settings_in_cm=false
-            fi
         else
             tags_sb="${tags_sb}${tags_sb:+,}${tags[i]}"
 
-            if [[ "${tags[i]}" =~ "settings" ]]; then
-                skip_settings_in_sb=false
-            fi
         fi
     done
 
@@ -181,10 +173,6 @@ install () {
 
         # Build arguments
         local arguments_sb="--tags $tags_sb"
-
-        if [ "$skip_settings_in_sb" = true ]; then
-            arguments_sb="${arguments_sb} --skip-tags settings"
-        fi
 
         if [[ -n "$extra_arg" ]]; then
             arguments_sb="${arguments_sb} ${extra_arg}"
@@ -204,10 +192,6 @@ install () {
 
         # Build arguments
         local arguments_cm="--tags $tags_cm"
-
-        if [ "$skip_settings_in_cm" = true ]; then
-            arguments_cm="${arguments_cm} --skip-tags settings"
-        fi
 
         if [[ -n "$extra_arg" ]]; then
             arguments_cm="${arguments_cm} ${extra_arg}"
