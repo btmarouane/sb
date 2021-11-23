@@ -44,6 +44,11 @@ COMMUNITY_REPO_PATH="/opt/community"
 COMMUNITY_PLAYBOOK_PATH="$COMMUNITY_REPO_PATH/community.yml"
 COMMUNITY_LOGFILE_PATH="$COMMUNITY_REPO_PATH/community.log"
 
+# Sandbox
+SANDBOX_REPO_PATH="/opt/sandbox"
+SANDBOX_PLAYBOOK_PATH="$SANDBOX_REPO_PATH/sandbox.yml"
+SANDBOX_LOGFILE_PATH="$SANDBOX_REPO_PATH/sandbox.log"
+
 # SB
 SB_REPO_PATH="/srv/git/sb"
 
@@ -60,7 +65,7 @@ git_fetch_and_reset () {
     git clean --quiet -df >/dev/null
     git reset --quiet --hard "@{u}" >/dev/null
     git submodule update --init --recursive
-    chmod 664 /srv/git/saltbox/ansible.cfg
+    chmod 664 "${SALTBOX_REPO_PATH}/ansible.cfg"
     # shellcheck disable=SC2154
     chown -R "${user_name}":"${user_name}" "${SALTBOX_REPO_PATH}"
 }
@@ -74,8 +79,21 @@ git_fetch_and_reset_community () {
     git clean --quiet -df >/dev/null
     git reset --quiet --hard "@{u}" >/dev/null
     git submodule update --init --recursive
-    chmod 664 /opt/community/ansible.cfg
+    chmod 664 "${COMMUNITY_REPO_PATH}/ansible.cfg"
     chown -R "${user_name}":"${user_name}" "${COMMUNITY_REPO_PATH}"
+}
+
+git_fetch_and_reset_sandbox () {
+
+    git fetch --quiet >/dev/null
+    git clean --quiet -df >/dev/null
+    git reset --quiet --hard "@{u}" >/dev/null
+    git checkout --quiet master >/dev/null
+    git clean --quiet -df >/dev/null
+    git reset --quiet --hard "@{u}" >/dev/null
+    git submodule update --init --recursive
+    chmod 664 "${SANDBOX_REPO_PATH}/ansible.cfg"
+    chown -R "${user_name}":"${user_name}" "${SANDBOX_REPO_PATH}"
 }
 
 git_fetch_and_reset_sb () {
@@ -126,6 +144,24 @@ run_playbook_cm () {
 
 }
 
+run_playbook_sandbox () {
+
+    local arguments=$*
+
+    echo "" > "${SANDBOX_LOGFILE_PATH}"
+
+    cd "${SANDBOX_REPO_PATH}" || exit
+
+    # shellcheck disable=SC2086
+    "${ANSIBLE_PLAYBOOK_BINARY_PATH}" \
+        "${SANDBOX_PLAYBOOK_PATH}" \
+        --become \
+        ${arguments}
+
+    cd - >/dev/null || exit
+
+}
+
 install () {
 
     local arg=("$@")
@@ -156,11 +192,15 @@ install () {
     # Build SB/CM tag arrays
     local tags_sb
     local tags_cm
+    local tags_sandbox
 
     for i in "${!tags[@]}"
     do
         if [[ ${tags[i]} == cm-* ]]; then
             tags_cm="${tags_cm}${tags_cm:+,}${tags[i]##cm-}"
+
+        elif [[ ${tags[i]} == sandbox-* ]]; then
+            tags_sandbox="${tags_sandbox}${tags_sandbox:+,}${tags[i]##sandbox-}"
 
         else
             tags_sb="${tags_sb}${tags_sb:+,}${tags[i]}"
@@ -206,6 +246,25 @@ install () {
         echo ""
     fi
 
+    # Sandbox Ansible Playbook
+    if [[ -n "$tags_sandbox" ]]; then
+
+        # Build arguments
+        local arguments_sandbox="--tags $tags_sandbox"
+
+        if [[ -n "$extra_arg" ]]; then
+            arguments_sandbox="${arguments_sandbox} ${extra_arg}"
+        fi
+
+        # Run playbook
+        echo "========================="
+        echo ""
+        echo "Running Sandbox Tags: ${tags_sandbox//,/,  }"
+        echo ""
+        run_playbook_sandbox "$arguments_sandbox"
+        echo ""
+    fi
+
 }
 
 update () {
@@ -231,6 +290,20 @@ cm-update () {
     git_fetch_and_reset_community
 
     run_playbook_cm "--tags settings" && echo -e '\n'
+
+    echo -e "Update Completed."
+
+}
+
+sandbox-update () {
+
+    echo -e "Updating Sandbox...\n"
+
+    cd "${SANDBOX_REPO_PATH}" || exit
+
+    git_fetch_and_reset_sandbox
+
+    run_playbook_sandbox "--tags settings" && echo -e '\n'
 
     echo -e "Update Completed."
 
@@ -279,9 +352,25 @@ cm-list () {
     cd - >/dev/null || exit
 }
 
+sandbox-list () {
+
+    echo -e "Sandbox tags (prepend sandbox-):\n"
+
+    cd "${SANDBOX_REPO_PATH}" || exit
+    "${ANSIBLE_PLAYBOOK_BINARY_PATH}" \
+        "${SANDBOX_PLAYBOOK_PATH}" \
+        --become \
+        --list-tags --skip-tags "always,sanity_check" 2>&1 | grep "TASK TAGS" | cut -d":" -f2 | awk '{sub(/\[/, "")sub(/\]/, "")}1' | cut -c2-
+
+    echo -e "\n"
+
+    cd - >/dev/null || exit
+}
+
 list () {
     sb-list
     cm-list
+    sandbox-list
 }
 
 usage () {
@@ -347,6 +436,7 @@ case "$subcommand" in
     update)
         update
         cm-update
+        sandbox-update
         ;;
     install)
         roles=${*}
