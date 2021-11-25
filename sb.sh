@@ -269,43 +269,54 @@ install () {
 
 update () {
 
-    echo -e "Updating Saltbox...\n"
+    if [[ -d "${SALTBOX_REPO_PATH}" ]]
+    then
+        echo -e "Updating Saltbox...\n"
 
-    cd "${SALTBOX_REPO_PATH}" || exit
+        cd "${SALTBOX_REPO_PATH}" || exit
 
-    git_fetch_and_reset
+        git_fetch_and_reset
 
-    run_playbook_sb "--tags settings" && echo -e '\n'
+        run_playbook_sb "--tags settings" && echo -e '\n'
 
-    echo -e "Update Completed."
+        echo -e "Update Completed."
+    else
+        echo -e "Saltbox folder not present."
+    fi
 
 }
 
 cm-update () {
 
-    echo -e "Updating Community...\n"
+    if [[ -d "${COMMUNITY_REPO_PATH}" ]]
+    then
+        echo -e "Updating Community...\n"
 
-    cd "${COMMUNITY_REPO_PATH}" || exit
+        cd "${COMMUNITY_REPO_PATH}" || exit
 
-    git_fetch_and_reset_community
+        git_fetch_and_reset_community
 
-    run_playbook_cm "--tags settings" && echo -e '\n'
+        run_playbook_cm "--tags settings" && echo -e '\n'
 
-    echo -e "Update Completed."
+        echo -e "Update Completed."
+    fi
 
 }
 
 sandbox-update () {
 
-    echo -e "Updating Sandbox...\n"
+    if [[ -d "${SANDBOX_REPO_PATH}" ]]
+    then
+        echo -e "Updating Sandbox...\n"
 
-    cd "${SANDBOX_REPO_PATH}" || exit
+        cd "${SANDBOX_REPO_PATH}" || exit
 
-    git_fetch_and_reset_sandbox
+        git_fetch_and_reset_sandbox
 
-    run_playbook_sandbox "--tags settings" && echo -e '\n'
+        run_playbook_sandbox "--tags settings" && echo -e '\n'
 
-    echo -e "Update Completed."
+        echo -e "Update Completed."
+    fi
 
 }
 
@@ -323,48 +334,62 @@ sb-update () {
 
 sb-list ()  {
 
-    echo -e "Saltbox tags:\n"
+    if [[ -d "${SALTBOX_REPO_PATH}" ]]
+    then
+        echo -e "Saltbox tags:\n"
 
-    cd "${SALTBOX_REPO_PATH}" || exit
+        cd "${SALTBOX_REPO_PATH}" || exit
 
-    "${ANSIBLE_PLAYBOOK_BINARY_PATH}" \
-        "${SALTBOX_PLAYBOOK_PATH}" \
-        --become \
-        --list-tags --skip-tags "always" 2>&1 | grep "TASK TAGS" | cut -d":" -f2 | awk '{sub(/\[/, "")sub(/\]/, "")}1' | cut -c2-
+        "${ANSIBLE_PLAYBOOK_BINARY_PATH}" \
+            "${SALTBOX_PLAYBOOK_PATH}" \
+            --become \
+            --list-tags --skip-tags "always" 2>&1 | grep "TASK TAGS" | cut -d":" -f2 | awk '{sub(/\[/, "")sub(/\]/, "")}1' | cut -c2-
 
-    echo -e "\n"
+        echo -e "\n"
 
-    cd - >/dev/null || exit
+        cd - >/dev/null || exit
+    else
+        echo -e "Saltbox folder not present.\n"
+    fi
+
 }
 
 cm-list () {
 
-    echo -e "Community tags (prepend cm-):\n"
+    if [[ -d "${COMMUNITY_REPO_PATH}" ]]
+    then
+        echo -e "Community tags (prepend cm-):\n"
 
-    cd "${COMMUNITY_REPO_PATH}" || exit
-    "${ANSIBLE_PLAYBOOK_BINARY_PATH}" \
-        "${COMMUNITY_PLAYBOOK_PATH}" \
-        --become \
-        --list-tags --skip-tags "always,sanity_check" 2>&1 | grep "TASK TAGS" | cut -d":" -f2 | awk '{sub(/\[/, "")sub(/\]/, "")}1' | cut -c2-
+        cd "${COMMUNITY_REPO_PATH}" || exit
+        "${ANSIBLE_PLAYBOOK_BINARY_PATH}" \
+            "${COMMUNITY_PLAYBOOK_PATH}" \
+            --become \
+            --list-tags --skip-tags "always,sanity_check" 2>&1 | grep "TASK TAGS" | cut -d":" -f2 | awk '{sub(/\[/, "")sub(/\]/, "")}1' | cut -c2-
 
-    echo -e "\n"
+        echo -e "\n"
 
-    cd - >/dev/null || exit
+        cd - >/dev/null || exit
+    fi
+
 }
 
 sandbox-list () {
 
-    echo -e "Sandbox tags (prepend sandbox-):\n"
+    if [[ -d "${SANDBOX_REPO_PATH}" ]]
+    then
+        echo -e "Sandbox tags (prepend sandbox-):\n"
 
-    cd "${SANDBOX_REPO_PATH}" || exit
-    "${ANSIBLE_PLAYBOOK_BINARY_PATH}" \
-        "${SANDBOX_PLAYBOOK_PATH}" \
-        --become \
-        --list-tags --skip-tags "always,sanity_check" 2>&1 | grep "TASK TAGS" | cut -d":" -f2 | awk '{sub(/\[/, "")sub(/\]/, "")}1' | cut -c2-
+        cd "${SANDBOX_REPO_PATH}" || exit
+        "${ANSIBLE_PLAYBOOK_BINARY_PATH}" \
+            "${SANDBOX_PLAYBOOK_PATH}" \
+            --become \
+            --list-tags --skip-tags "always,sanity_check" 2>&1 | grep "TASK TAGS" | cut -d":" -f2 | awk '{sub(/\[/, "")sub(/\]/, "")}1' | cut -c2-
 
-    echo -e "\n"
+        echo -e "\n"
 
-    cd - >/dev/null || exit
+        cd - >/dev/null || exit
+    fi
+
 }
 
 list () {
