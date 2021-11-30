@@ -105,7 +105,7 @@ git_fetch_and_reset_sb () {
     git clean --quiet -df >/dev/null
     git reset --quiet --hard "@{u}" >/dev/null
     git submodule update --init --recursive
-    chmod 775 /srv/git/sb/sb.sh
+    chmod 775 "${SB_REPO_PATH}/sb.sh"
 }
 
 run_playbook_sb () {
