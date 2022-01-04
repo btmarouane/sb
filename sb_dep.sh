@@ -66,7 +66,7 @@ fi
 export DEBIAN_FRONTEND=noninteractive
 
 ## Install Pre-Dependencies
-apt-get install -y --reinstall \
+apt-get install -y \
     software-properties-common \
     apt-transport-https
 apt-get update
@@ -79,7 +79,7 @@ add-apt-repository multiverse
 apt-get update
 
 ## Install apt Dependencies
-apt-get install -y --reinstall \
+apt-get install -y \
     nano \
     git \
     build-essential \
