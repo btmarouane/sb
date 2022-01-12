@@ -92,6 +92,9 @@ apt-get install -y \
     python3-virtualenv \
     python3-venv
 
+## Uninstall setuptools as a workaround for https://github.com/pypa/pip/issues/10742
+python3 -m pip uninstall -y setuptools
+
 ## Install pip3
 cd /tmp || exit
 curl -sLO https://bootstrap.pypa.io/get-pip.py
@@ -99,9 +102,7 @@ python3 get-pip.py
 
 ## Install pip3 Dependencies
 $PYTHON3_CMD \
-    pip
-$PYTHON3_CMD \
-    setuptools
+    pip setuptools wheel
 $PYTHON3_CMD \
     pyOpenSSL \
     requests \
