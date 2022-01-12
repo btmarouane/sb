@@ -83,6 +83,7 @@ apt-get install -y \
     nano \
     git \
     curl \
+    gpg-agent \
     build-essential \
     libssl-dev \
     libffi-dev \
