@@ -48,6 +48,7 @@ done
 # Main
 ################################
 
+# Check for supported Ubuntu Releases
 release=$(lsb_release -cs)
  
 # Add more releases like (focal|jammy)$
@@ -57,6 +58,17 @@ else
     echo "$release is currently not supported."
     exit 1
 fi
+
+# Check if using valid arch
+arch=$(uname -m)
+
+if [[ $arch =~ (x86_64)$ ]]; then
+    echo "$arch is currently supported."
+else
+    echo "$arch is currently not supported."
+    exit 1
+fi
+
 
 $VERBOSE || exec &>/dev/null
 
