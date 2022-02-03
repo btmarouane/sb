@@ -48,6 +48,16 @@ done
 # Main
 ################################
 
+release=$(lsb_release -cs)
+ 
+# Add more releases like (focal|jammy)$
+if [[ $release =~ (focal)$ ]]; then
+    echo "$release is currently supported."
+else
+    echo "$release is currently not supported."
+    exit 1
+fi
+
 $VERBOSE || exec &>/dev/null
 
 $VERBOSE && echo "Script Path: $SCRIPT_PATH"
