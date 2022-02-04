@@ -69,6 +69,7 @@ else
     exit 1
 fi
 
+echo "Installing Saltbox Dependencies."
 
 $VERBOSE || exec &>/dev/null
 
