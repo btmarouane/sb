@@ -39,11 +39,6 @@ SALTBOX_REPO_PATH="/srv/git/saltbox"
 SALTBOX_PLAYBOOK_PATH="$SALTBOX_REPO_PATH/saltbox.yml"
 SALTBOX_LOGFILE_PATH="$SALTBOX_REPO_PATH/saltbox.log"
 
-# Community
-COMMUNITY_REPO_PATH="/opt/community"
-COMMUNITY_PLAYBOOK_PATH="$COMMUNITY_REPO_PATH/community.yml"
-COMMUNITY_LOGFILE_PATH="$COMMUNITY_REPO_PATH/community.log"
-
 # Sandbox
 SANDBOX_REPO_PATH="/opt/sandbox"
 SANDBOX_PLAYBOOK_PATH="$SANDBOX_REPO_PATH/sandbox.yml"
@@ -68,19 +63,6 @@ git_fetch_and_reset () {
     chmod 664 "${SALTBOX_REPO_PATH}/ansible.cfg"
     # shellcheck disable=SC2154
     chown -R "${user_name}":"${user_name}" "${SALTBOX_REPO_PATH}"
-}
-
-git_fetch_and_reset_community () {
-
-    git fetch --quiet >/dev/null
-    git clean --quiet -df >/dev/null
-    git reset --quiet --hard "@{u}" >/dev/null
-    git checkout --quiet master >/dev/null
-    git clean --quiet -df >/dev/null
-    git reset --quiet --hard "@{u}" >/dev/null
-    git submodule update --init --recursive
-    chmod 664 "${COMMUNITY_REPO_PATH}/ansible.cfg"
-    chown -R "${user_name}":"${user_name}" "${COMMUNITY_REPO_PATH}"
 }
 
 git_fetch_and_reset_sandbox () {
@@ -119,24 +101,6 @@ run_playbook_sb () {
     # shellcheck disable=SC2086
     "${ANSIBLE_PLAYBOOK_BINARY_PATH}" \
         "${SALTBOX_PLAYBOOK_PATH}" \
-        --become \
-        ${arguments}
-
-    cd - >/dev/null || exit
-
-}
-
-run_playbook_cm () {
-
-    local arguments=$*
-
-    echo "" > "${COMMUNITY_LOGFILE_PATH}"
-
-    cd "${COMMUNITY_REPO_PATH}" || exit
-
-    # shellcheck disable=SC2086
-    "${ANSIBLE_PLAYBOOK_BINARY_PATH}" \
-        "${COMMUNITY_PLAYBOOK_PATH}" \
         --become \
         ${arguments}
 
@@ -191,15 +155,11 @@ install () {
 
     # Build SB/CM tag arrays
     local tags_sb
-    local tags_cm
     local tags_sandbox
 
     for i in "${!tags[@]}"
     do
-        if [[ ${tags[i]} == cm-* ]]; then
-            tags_cm="${tags_cm}${tags_cm:+,}${tags[i]##cm-}"
-
-        elif [[ ${tags[i]} == sandbox-* ]]; then
+        if [[ ${tags[i]} == sandbox-* ]]; then
             tags_sandbox="${tags_sandbox}${tags_sandbox:+,}${tags[i]##sandbox-}"
 
         else
@@ -225,25 +185,6 @@ install () {
         run_playbook_sb "$arguments_sb"
         echo ""
 
-    fi
-
-    # Community Ansible Playbook
-    if [[ -n "$tags_cm" ]]; then
-
-        # Build arguments
-        local arguments_cm="--tags $tags_cm"
-
-        if [[ -n "$extra_arg" ]]; then
-            arguments_cm="${arguments_cm} ${extra_arg}"
-        fi
-
-        # Run playbook
-        echo "========================="
-        echo ""
-        echo "Running Community Tags: ${tags_cm//,/,  }"
-        echo ""
-        run_playbook_cm "$arguments_cm"
-        echo ""
     fi
 
     # Sandbox Ansible Playbook
@@ -282,23 +223,6 @@ update () {
         echo -e "Update Completed."
     else
         echo -e "Saltbox folder not present."
-    fi
-
-}
-
-cm-update () {
-
-    if [[ -d "${COMMUNITY_REPO_PATH}" ]]
-    then
-        echo -e "Updating Community...\n"
-
-        cd "${COMMUNITY_REPO_PATH}" || exit
-
-        git_fetch_and_reset_community
-
-        run_playbook_cm "--tags settings" && echo -e '\n'
-
-        echo -e "Update Completed."
     fi
 
 }
@@ -354,25 +278,6 @@ sb-list ()  {
 
 }
 
-cm-list () {
-
-    if [[ -d "${COMMUNITY_REPO_PATH}" ]]
-    then
-        echo -e "Community tags (prepend cm-):\n"
-
-        cd "${COMMUNITY_REPO_PATH}" || exit
-        "${ANSIBLE_PLAYBOOK_BINARY_PATH}" \
-            "${COMMUNITY_PLAYBOOK_PATH}" \
-            --become \
-            --list-tags --skip-tags "always,sanity_check" 2>&1 | grep "TASK TAGS" | cut -d":" -f2 | awk '{sub(/\[/, "")sub(/\]/, "")}1' | cut -c2-
-
-        echo -e "\n"
-
-        cd - >/dev/null || exit
-    fi
-
-}
-
 sandbox-list () {
 
     if [[ -d "${SANDBOX_REPO_PATH}" ]]
@@ -394,7 +299,6 @@ sandbox-list () {
 
 list () {
     sb-list
-    cm-list
     sandbox-list
 }
 
@@ -460,7 +364,6 @@ case "$subcommand" in
         ;;
     update)
         update
-        cm-update
         sandbox-update
         ;;
     install)
