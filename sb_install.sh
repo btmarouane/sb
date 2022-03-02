@@ -55,7 +55,7 @@ release=$(lsb_release -cs)
 if [[ $release =~ (focal)$ ]]; then
     echo "$release is currently supported."
 elif [[ $release =~ (jammy)$ ]]; then
-         echo "$release is currently in testing."
+    read -p "$release is currently in testing. Press enter to continue"
 else
     echo "$release is currently not supported."
     exit 1
