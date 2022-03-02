@@ -54,6 +54,8 @@ release=$(lsb_release -cs)
 # Add more releases like (focal|jammy)$
 if [[ $release =~ (focal)$ ]]; then
     echo "$release is currently supported."
+elif [[ $release =~ (jammy)$ ]]; then
+         echo "$release is currently in testing."
 else
     echo "$release is currently not supported."
     exit 1
