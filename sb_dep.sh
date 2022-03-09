@@ -94,7 +94,13 @@ apt-get install -y \
     python3-venv
 
 ## Check locale contains UTF-8 and if not change it to en_US.UTF-8
-locale charmap | grep -qi 'utf-\+8' && echo "Uses UTF-8 encoding." || (update-locale LANG=en_US.UTF-8 && echo "Set locale to en_US.UTF-8")
+if (locale charmap | grep -qi 'utf-\+8'); then
+    echo "Uses UTF-8 encoding."
+else
+    update-locale LANG=en_US.UTF-8
+    echo "Set locale to en_US.UTF-8"
+fi
+
 
 ## Uninstall setuptools as a workaround for https://github.com/pypa/pip/issues/10742
 python3 -m pip uninstall -y setuptools
