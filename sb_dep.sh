@@ -98,7 +98,8 @@ if (locale charmap | grep -qi 'utf-\+8'); then
     echo "Uses UTF-8 encoding."
 else
     update-locale LANG=en_US.UTF-8
-    echo "Set locale to en_US.UTF-8"
+    echo "Not using UTF-8 encoding."
+    echo "locale was set to en_US.UTF-8"
 fi
 
 
