@@ -119,6 +119,7 @@ $PYTHON3_CMD \
     requests \
     netaddr \
     jmespath \
+    jinja2 \
     ansible$ANSIBLE
 
 ## Copy /usr/local/bin/pip to /usr/bin/pip
