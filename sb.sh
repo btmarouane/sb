@@ -31,7 +31,7 @@ create_variables /srv/git/saltbox/accounts.yml
 # Variables
 ################################
 
-#Ansible
+# Ansible
 ANSIBLE_PLAYBOOK_BINARY_PATH="/usr/local/bin/ansible-playbook"
 
 # Saltbox
@@ -43,6 +43,11 @@ SALTBOX_LOGFILE_PATH="$SALTBOX_REPO_PATH/saltbox.log"
 SANDBOX_REPO_PATH="/opt/sandbox"
 SANDBOX_PLAYBOOK_PATH="$SANDBOX_REPO_PATH/sandbox.yml"
 SANDBOX_LOGFILE_PATH="$SANDBOX_REPO_PATH/sandbox.log"
+
+# Saltbox_mod
+SALTBOXMOD_REPO_PATH="/opt/saltbox_mod"
+SALTBOXMOD_PLAYBOOK_PATH="$SALTBOXMOD_REPO_PATH/saltbox_mod.yml"
+SALTBOXMOD_LOGFILE_PATH="$SALTBOXMOD_REPO_PATH/saltbox_mod.log"
 
 # SB
 SB_REPO_PATH="/srv/git/sb"
@@ -126,6 +131,24 @@ run_playbook_sandbox () {
 
 }
 
+run_playbook_saltboxmod () {
+
+    local arguments=$*
+
+    echo "" > "${SALTBOXMOD_LOGFILE_PATH}"
+
+    cd "${SALTBOXMOD_REPO_PATH}" || exit
+
+    # shellcheck disable=SC2086
+    "${ANSIBLE_PLAYBOOK_BINARY_PATH}" \
+        "${SALTBOXMOD_PLAYBOOK_PATH}" \
+        --become \
+        ${arguments}
+
+    cd - >/dev/null || exit
+
+}
+
 install () {
 
     local arg=("$@")
@@ -156,11 +179,15 @@ install () {
     # Build SB/CM tag arrays
     local tags_sb
     local tags_sandbox
+    local tags_saltboxmod
 
     for i in "${!tags[@]}"
     do
         if [[ ${tags[i]} == sandbox-* ]]; then
             tags_sandbox="${tags_sandbox}${tags_sandbox:+,}${tags[i]##sandbox-}"
+
+        elif [[ ${tags[i]} == mod-* ]]; then
+            tags_saltboxmod="${tags_saltboxmod}${tags_saltboxmod:+,}${tags[i]##mod-}"
 
         else
             tags_sb="${tags_sb}${tags_sb:+,}${tags[i]}"
@@ -203,6 +230,25 @@ install () {
         echo "Running Sandbox Tags: ${tags_sandbox//,/,  }"
         echo ""
         run_playbook_sandbox "$arguments_sandbox"
+        echo ""
+    fi
+
+    # Saltbox_mod Ansible Playbook
+    if [[ -n "$tags_saltboxmod" ]]; then
+
+        # Build arguments
+        local arguments_saltboxmod="--tags $tags_saltboxmod"
+
+        if [[ -n "$extra_arg" ]]; then
+            arguments_saltboxmod="${arguments_saltboxmod} ${extra_arg}"
+        fi
+
+        # Run playbook
+        echo "========================="
+        echo ""
+        echo "Running Saltbox_mod Tags: ${tags_saltboxmod//,/,  }"
+        echo ""
+        run_playbook_saltboxmod "$arguments_saltboxmod"
         echo ""
     fi
 
@@ -297,9 +343,29 @@ sandbox-list () {
 
 }
 
+saltboxmod-list () {
+
+    if [[ -d "${SALTBOXMOD_REPO_PATH}" ]]
+    then
+        echo -e "Saltbox_mod tags (prepend mod-):\n"
+
+        cd "${SALTBOXMOD_REPO_PATH}" || exit
+        "${ANSIBLE_PLAYBOOK_BINARY_PATH}" \
+            "${SALTBOXMOD_PLAYBOOK_PATH}" \
+            --become \
+            --list-tags --skip-tags "always,sanity_check" 2>&1 | grep "TASK TAGS" | cut -d":" -f2 | awk '{sub(/\[/, "")sub(/\]/, "")}1' | cut -c2-
+
+        echo -e "\n"
+
+        cd - >/dev/null || exit
+    fi
+
+}
+
 list () {
     sb-list
     sandbox-list
+    saltboxmod-list
 }
 
 usage () {
