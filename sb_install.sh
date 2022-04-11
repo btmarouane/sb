@@ -55,9 +55,9 @@ release=$(lsb_release -cs)
 if [[ $release =~ (focal)$ ]]; then
     echo "$release is currently supported."
 elif [[ $release =~ (jammy)$ ]]; then
-    read -p "$release is currently in testing. Press enter to continue"
+    echo "$release is currently in testing."
 else
-    echo "$release is currently not supported."
+    echo "$release is not supported."
     exit 1
 fi
 
@@ -67,7 +67,7 @@ arch=$(uname -m)
 if [[ $arch =~ (x86_64)$ ]]; then
     echo "$arch is currently supported."
 else
-    echo "$arch is currently not supported."
+    echo "$arch is not supported."
     exit 1
 fi
 
