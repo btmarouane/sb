@@ -58,7 +58,6 @@ SB_REPO_PATH="/srv/git/sb"
 
 git_fetch_and_reset () {
 
-    git config --global --add safe.directory "${SALTBOX_REPO_PATH}"
     git fetch --quiet >/dev/null
     git clean --quiet -df >/dev/null
     git reset --quiet --hard "@{u}" >/dev/null
@@ -73,7 +72,6 @@ git_fetch_and_reset () {
 
 git_fetch_and_reset_sandbox () {
 
-    git config --global --add safe.directory "${SANDBOX_REPO_PATH}"
     git fetch --quiet >/dev/null
     git clean --quiet -df >/dev/null
     git reset --quiet --hard "@{u}" >/dev/null
@@ -87,7 +85,6 @@ git_fetch_and_reset_sandbox () {
 
 git_fetch_and_reset_sb () {
 
-    git config --global --add safe.directory "${SB_REPO_PATH}"
     git fetch --quiet >/dev/null
     git clean --quiet -df >/dev/null
     git reset --quiet --hard "@{u}" >/dev/null
@@ -384,7 +381,6 @@ usage () {
 
 cd "${SB_REPO_PATH}" || exit
 
-git config --global --add safe.directory "${SB_REPO_PATH}"
 git fetch
 HEADHASH=$(git rev-parse HEAD)
 UPSTREAMHASH=$(git rev-parse "master@{upstream}")
