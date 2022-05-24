@@ -97,7 +97,8 @@ apt-get install -y \
 if (locale charmap | grep -qi 'utf-\+8'); then
     echo "Uses UTF-8 encoding."
 else
-    update-locale LANG=en_US.UTF-8
+    locale-gen en_US.UTF-8
+    update-locale
     echo "Not using UTF-8 encoding."
     echo "locale was set to en_US.UTF-8"
 fi
