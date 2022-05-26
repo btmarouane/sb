@@ -99,6 +99,7 @@ if (locale charmap | grep -qi 'utf-\+8'); then
 else
     locale-gen en_US.UTF-8
     update-locale
+    export LC_ALL=en_US.UTF-8
     echo "Not using UTF-8 encoding."
     echo "locale was set to en_US.UTF-8"
 fi
