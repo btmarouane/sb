@@ -156,24 +156,26 @@ install () {
 
     # Remove space after comma
     # shellcheck disable=SC2128,SC2001
-    arg_clean=$(sed -e 's/, /,/g' <<< "$arg")
+    local arg_clean
+    arg_clean=${arg//, /,}
 
     # Split tags from extra arguments
     # https://stackoverflow.com/a/10520842
-    re="^(\S+)\s+(-.*)?$"
+    local re="^(\S+)\s+(-.*)?$"
     if [[ "$arg_clean" =~ $re ]]; then
-        tags_arg="${BASH_REMATCH[1]}"
-        extra_arg="${BASH_REMATCH[2]}"
+        local tags_arg="${BASH_REMATCH[1]}"
+        local extra_arg="${BASH_REMATCH[2]}"
     else
         tags_arg="$arg_clean"
     fi
 
     # Save tags into 'tags' array
     # shellcheck disable=SC2206
-    tags_tmp=(${tags_arg//,/ })
+    local tags_tmp=(${tags_arg//,/ })
 
     # Remove duplicate entries from array
     # https://stackoverflow.com/a/31736999
+    local tags=()
     readarray -t tags < <(printf '%s\n' "${tags_tmp[@]}" | awk '!x[$0]++')
 
     # Build SB/CM tag arrays

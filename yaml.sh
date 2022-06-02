@@ -53,7 +53,8 @@ unset_variables() {
   #shellcheck disable=SC2048,SC2206 #Permit variables without quotes
   local variable_string=($*)
   unset variables
-  variables=()
+  local variables=()
+  local tmpvar
   for variable in "${variable_string[@]}" ; do
     tmpvar=$(echo "$variable" | grep '=' | sed 's/=.*//' | sed 's/+.*//')
     variables+=("$tmpvar")
