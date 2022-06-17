@@ -99,8 +99,6 @@ run_playbook_sb () {
 
     local arguments=$*
 
-    echo "" > "${SALTBOX_LOGFILE_PATH}"
-
     cd "${SALTBOX_REPO_PATH}" || exit
 
     # shellcheck disable=SC2086
@@ -117,8 +115,6 @@ run_playbook_sandbox () {
 
     local arguments=$*
 
-    echo "" > "${SANDBOX_LOGFILE_PATH}"
-
     cd "${SANDBOX_REPO_PATH}" || exit
 
     # shellcheck disable=SC2086
@@ -134,8 +130,6 @@ run_playbook_sandbox () {
 run_playbook_saltboxmod () {
 
     local arguments=$*
-
-    echo "" > "${SALTBOXMOD_LOGFILE_PATH}"
 
     cd "${SALTBOXMOD_REPO_PATH}" || exit
 
