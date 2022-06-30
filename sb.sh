@@ -279,6 +279,11 @@ sandbox-update () {
 
         git_fetch_and_reset_sandbox
 
+        if [[ ! -f "${SANDBOX_REPO_PATH}/ansible.cfg" ]]
+        then
+            cp "${SANDBOX_REPO_PATH}/defaults/ansible.cfg.default" "${SANDBOX_REPO_PATH}/ansible.cfg"
+        fi
+
         run_playbook_sandbox "--tags settings" && echo -e '\n'
 
         echo -e "Update Completed."
