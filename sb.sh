@@ -79,6 +79,12 @@ git_fetch_and_reset_sandbox () {
     git clean --quiet -df >/dev/null
     git reset --quiet --hard "@{u}" >/dev/null
     git submodule update --init --recursive
+
+    if [[ ! -f "${SANDBOX_REPO_PATH}/ansible.cfg" ]]
+    then
+        cp "${SANDBOX_REPO_PATH}/defaults/ansible.cfg.default" "${SANDBOX_REPO_PATH}/ansible.cfg"
+    fi
+
     chmod 664 "${SANDBOX_REPO_PATH}/ansible.cfg"
     chown -R "${user_name}":"${user_name}" "${SANDBOX_REPO_PATH}"
 }
@@ -278,11 +284,6 @@ sandbox-update () {
         cd "${SANDBOX_REPO_PATH}" || exit
 
         git_fetch_and_reset_sandbox
-
-        if [[ ! -f "${SANDBOX_REPO_PATH}/ansible.cfg" ]]
-        then
-            cp "${SANDBOX_REPO_PATH}/defaults/ansible.cfg.default" "${SANDBOX_REPO_PATH}/ansible.cfg"
-        fi
 
         run_playbook_sandbox "--tags settings" && echo -e '\n'
 
