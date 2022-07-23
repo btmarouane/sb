@@ -37,17 +37,14 @@ ANSIBLE_PLAYBOOK_BINARY_PATH="/usr/local/bin/ansible-playbook"
 # Saltbox
 SALTBOX_REPO_PATH="/srv/git/saltbox"
 SALTBOX_PLAYBOOK_PATH="$SALTBOX_REPO_PATH/saltbox.yml"
-SALTBOX_LOGFILE_PATH="$SALTBOX_REPO_PATH/saltbox.log"
 
 # Sandbox
 SANDBOX_REPO_PATH="/opt/sandbox"
 SANDBOX_PLAYBOOK_PATH="$SANDBOX_REPO_PATH/sandbox.yml"
-SANDBOX_LOGFILE_PATH="$SANDBOX_REPO_PATH/sandbox.log"
 
 # Saltbox_mod
 SALTBOXMOD_REPO_PATH="/opt/saltbox_mod"
 SALTBOXMOD_PLAYBOOK_PATH="$SALTBOXMOD_REPO_PATH/saltbox_mod.yml"
-SALTBOXMOD_LOGFILE_PATH="$SALTBOXMOD_REPO_PATH/saltbox_mod.log"
 
 # SB
 SB_REPO_PATH="/srv/git/sb"
@@ -61,7 +58,7 @@ git_fetch_and_reset () {
     git fetch --quiet >/dev/null
     git clean --quiet -df >/dev/null
     git reset --quiet --hard "@{u}" >/dev/null
-    git checkout --quiet master >/dev/null
+    git checkout --quiet "${SALTBOX_BRANCH:-master}" >/dev/null
     git clean --quiet -df >/dev/null
     git reset --quiet --hard "@{u}" >/dev/null
     git submodule update --init --recursive
@@ -75,7 +72,7 @@ git_fetch_and_reset_sandbox () {
     git fetch --quiet >/dev/null
     git clean --quiet -df >/dev/null
     git reset --quiet --hard "@{u}" >/dev/null
-    git checkout --quiet master >/dev/null
+    git checkout --quiet "${SANDBOX_BRANCH:-master}" >/dev/null
     git clean --quiet -df >/dev/null
     git reset --quiet --hard "@{u}" >/dev/null
     git submodule update --init --recursive
@@ -94,7 +91,7 @@ git_fetch_and_reset_sb () {
     git fetch --quiet >/dev/null
     git clean --quiet -df >/dev/null
     git reset --quiet --hard "@{u}" >/dev/null
-    git checkout --quiet master >/dev/null
+    git checkout --quiet "${SB_BRANCH:-master}" >/dev/null
     git clean --quiet -df >/dev/null
     git reset --quiet --hard "@{u}" >/dev/null
     git submodule update --init --recursive
@@ -364,6 +361,58 @@ saltboxmod-list () {
 
 }
 
+saltbox-branch () {
+    if [[ -d "${SALTBOX_REPO_PATH}" ]]
+    then
+        echo -e "Changing Saltbox branch to $1...\n"
+
+        cd "${SALTBOX_REPO_PATH}" || exit
+
+        SALTBOX_BRANCH=$1
+
+        git_fetch_and_reset
+
+        run_playbook_sb "--tags settings" && echo -e '\n'
+
+        echo -e "Update Completed."
+    else
+        echo -e "Saltbox folder not present."
+    fi
+}
+
+sandbox-branch () {
+
+    if [[ -d "${SANDBOX_REPO_PATH}" ]]
+    then
+        echo -e "Changing Sandbox branch to $1...\n"
+
+        cd "${SANDBOX_REPO_PATH}" || exit
+
+        SANDBOX_BRANCH=$1
+
+        git_fetch_and_reset_sandbox
+
+        run_playbook_sandbox "--tags settings" && echo -e '\n'
+
+        echo -e "Update Completed."
+    fi
+
+}
+
+sb-branch () {
+
+        echo -e "Changing sb branch to $1...\n"
+
+    cd "${SB_REPO_PATH}" || exit
+
+    SB_BRANCH=$1
+
+    git_fetch_and_reset_sb
+
+    echo -e "Update Completed."
+
+}
+
 list () {
     sb-list
     sandbox-list
@@ -437,6 +486,15 @@ case "$subcommand" in
     install)
         roles=${*}
         install "${roles}"
+        ;;
+    branch)
+        saltbox-branch "${*}"
+        ;;
+    sandbox-branch)
+        sandbox-branch "${*}"
+        ;;
+    sb-branch)
+        sb-branch "${*}"
         ;;
     "") echo "A command is required."
         echo ""
