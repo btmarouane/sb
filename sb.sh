@@ -91,7 +91,7 @@ git_fetch_and_reset_sb () {
     git fetch --quiet >/dev/null
     git clean --quiet -df >/dev/null
     git reset --quiet --hard "@{u}" >/dev/null
-    git checkout --quiet "${SB_BRANCH:-master}" >/dev/null
+    git checkout --quiet master >/dev/null
     git clean --quiet -df >/dev/null
     git reset --quiet --hard "@{u}" >/dev/null
     git submodule update --init --recursive
@@ -399,20 +399,6 @@ sandbox-branch () {
 
 }
 
-sb-branch () {
-
-        echo -e "Changing sb branch to $1...\n"
-
-    cd "${SB_REPO_PATH}" || exit
-
-    SB_BRANCH=$1
-
-    git_fetch_and_reset_sb
-
-    echo -e "Update Completed."
-
-}
-
 list () {
     sb-list
     sandbox-list
@@ -492,9 +478,6 @@ case "$subcommand" in
         ;;
     sandbox-branch)
         sandbox-branch "${*}"
-        ;;
-    sb-branch)
-        sb-branch "${*}"
         ;;
     "") echo "A command is required."
         echo ""
