@@ -48,6 +48,22 @@ done
 # Main
 ################################
 
+# Check if Cloudbox is installed
+# develop
+if [ -d "/srv/git/cloudbox" ]; then
+   echo "Cloudbox installed. Exiting..."
+   exit 1
+fi
+
+# master
+for directory in /home/*/*/ ; do
+  base=$(basename "$directory")
+  if [ "$base" == "cloudbox" ]; then
+   echo "Cloudbox installed. Exiting..."
+   exit 1
+  fi
+done
+
 # Check for supported Ubuntu Releases
 release=$(lsb_release -cs)
  
