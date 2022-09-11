@@ -175,7 +175,7 @@ install () {
     local tags=()
     readarray -t tags < <(printf '%s\n' "${tags_tmp[@]}" | awk '!x[$0]++')
 
-    # Build SB/CM tag arrays
+    # Build SB/Sandbox/Saltbox-mod tag arrays
     local tags_sb
     local tags_sandbox
     local tags_saltboxmod
@@ -438,7 +438,6 @@ fi
 # https://sookocheff.com/post/bash/parsing-bash-script-arguments-with-shopts/
 
 roles=""  # Default to empty role
-#target=""  # Default to empty target
 
 # Parse options
 while getopts ":h" opt; do
