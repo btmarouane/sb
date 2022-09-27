@@ -407,6 +407,7 @@ list () {
 
 fix-ansible () {
   bash "/srv/git/saltbox/scripts/update.sh"
+  cat "/srv/git/saltbox/ansible-update.log"
 }
 
 usage () {
