@@ -405,9 +405,8 @@ list () {
     saltboxmod-list
 }
 
-fix-ansible () {
+update-ansible () {
   bash "/srv/git/saltbox/scripts/update.sh"
-  cat "/srv/git/saltbox/ansible-update.log"
 }
 
 usage () {
@@ -415,7 +414,7 @@ usage () {
     echo "    sb update              Update Saltbox."
     echo "    sb list                List Saltbox packages."
     echo "    sb install <package>   Install <package>."
-    echo "    sb fix-ansible         Re-install Ansible."
+    echo "    sb update-ansible      Re-install Ansible."
 }
 
 ################################
@@ -484,8 +483,8 @@ case "$subcommand" in
     sandbox-branch)
         sandbox-branch "${*}"
         ;;
-    fix-ansible)
-        fix-ansible
+    update-ansible)
+        update-ansible
         ;;
     "") echo "A command is required."
         echo ""
