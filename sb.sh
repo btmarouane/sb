@@ -149,6 +149,14 @@ run_playbook_saltboxmod () {
 install () {
 
     local arg=("$@")
+
+    if [ -z "$arg" ]
+    then
+      echo -e "No install tag was provided.\n"
+      usage
+      exit 1
+    fi
+
     echo "${arg[*]}"
 
     # Remove space after comma
@@ -412,8 +420,8 @@ update-ansible () {
 usage () {
     echo "Usage:"
     echo "    sb update              Update Saltbox."
-    echo "    sb list                List Saltbox packages."
-    echo "    sb install <package>   Install <package>."
+    echo "    sb list                List Saltbox tags."
+    echo "    sb install <tag>       Install <tag>."
     echo "    sb update-ansible      Re-install Ansible."
 }
 
