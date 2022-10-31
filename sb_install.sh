@@ -14,6 +14,7 @@
 
 VERBOSE=false
 VERBOSE_OPT=""
+SUPPORT=true
 SB_REPO="https://github.com/saltyorg/sb.git"
 SB_PATH="/srv/git/sb"
 SB_INSTALL_SCRIPT="$SB_PATH/sb_install.sh"
@@ -36,11 +37,17 @@ run_cmd () {
 # Argument Parser
 ################################
 
-while getopts 'v' f; do
-  case $f in
+while getopts 'v-:' f; do
+  case "${f}" in
   v)  VERBOSE=true
       VERBOSE_OPT="-v"
-  ;;
+      ;;
+  -)
+      case "${OPTARG}" in
+          no-support)
+              SUPPORT=false
+              ;;
+      esac;;
   esac
 done
 
@@ -66,15 +73,21 @@ done
 
 # Check for supported Ubuntu Releases
 release=$(lsb_release -cs)
- 
+
 # Add more releases like (focal|jammy)$
 if [[ $release =~ (focal|jammy)$ ]]; then
     echo "$release is currently supported."
 elif [[ $release =~ (placeholder)$ ]]; then
     echo "$release is currently in testing."
 else
-    echo "$release is not supported."
-    exit 1
+    if $SUPPORT; then
+        echo "$release is not supported."
+        exit 1
+    else
+        echo "You have chosen to ignore support."
+        echo "Do not ask for support on our discord."
+        sleep 10
+    fi
 fi
 
 # Check if using valid arch
