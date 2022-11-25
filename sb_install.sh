@@ -1,4 +1,5 @@
 #!/bin/bash
+#shellcheck disable=SC2220
 #########################################################################
 # Title:         Saltbox Install Script                                 #
 # Author(s):     desimaniac, salty                                      #
@@ -80,12 +81,17 @@ if [[ $release =~ (focal|jammy)$ ]]; then
 elif [[ $release =~ (placeholder)$ ]]; then
     echo "$release is currently in testing."
 else
+    echo "==== UNSUPPORTED OS ===="
     if $SUPPORT; then
-        echo "$release is not supported."
+        echo "Install cancelled: $release is not supported."
+        echo "Supported OS: 20.04 (focal) and 22.04 (jammy)"
+        echo "==== UNSUPPORTED OS ===="
         exit 1
     else
+        echo "Forcing install on $release."
         echo "You have chosen to ignore support."
         echo "Do not ask for support on our discord."
+        echo "==== UNSUPPORTED OS ===="
         sleep 10
     fi
 fi
@@ -96,7 +102,10 @@ arch=$(uname -m)
 if [[ $arch =~ (x86_64)$ ]]; then
     echo "$arch is currently supported."
 else
-    echo "$arch is not supported."
+    echo "==== UNSUPPORTED CPU Architecture ===="
+    echo "Install cancelled: $arch is not supported."
+    echo "Supported CPU Architecture(s): x86_64"
+    echo "==== UNSUPPORTED CPU Architecture ===="
     exit 1
 fi
 
