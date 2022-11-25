@@ -414,7 +414,7 @@ list () {
 }
 
 update-ansible () {
-  bash "/srv/git/saltbox/scripts/update.sh"
+    bash "/srv/git/saltbox/scripts/update.sh"
 }
 
 usage () {
@@ -437,11 +437,11 @@ UPSTREAMHASH=$(git rev-parse "master@{upstream}")
 
 if [ "$HEADHASH" != "$UPSTREAMHASH" ]
 then
- echo -e Not up to date with origin. Updating.
- sb-update
- echo -e Relaunching with previous arguments.
- sudo "$0" "$@"
- exit 0
+    echo -e Not up to date with origin. Updating.
+    sb-update
+    echo -e Relaunching with previous arguments.
+    sudo "$0" "$@"
+    exit 0
 fi
 
 ################################
@@ -464,7 +464,7 @@ while getopts ":h" opt; do
         echo ""
         usage
         exit 1
-     ;;
+        ;;
   esac
 done
 shift $((OPTIND -1))

@@ -26,12 +26,12 @@ SCRIPT_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/$(basename "${BASH_SO
 ################################
 
 run_cmd () {
-  if $VERBOSE; then
-      printf '%s\n' "+ $*" >&2;
-      "$@"
-  else
-      "$@" > /dev/null 2>&1
-  fi
+    if $VERBOSE; then
+        printf '%s\n' "+ $*" >&2;
+        "$@"
+    else
+        "$@" > /dev/null 2>&1
+    fi
 }
 
 ################################
@@ -39,17 +39,17 @@ run_cmd () {
 ################################
 
 while getopts 'v-:' f; do
-  case "${f}" in
-  v)  VERBOSE=true
-      VERBOSE_OPT="-v"
-      ;;
-  -)
-      case "${OPTARG}" in
-          no-support)
-              SUPPORT=false
-              ;;
-      esac;;
-  esac
+    case "${f}" in
+    v)  VERBOSE=true
+        VERBOSE_OPT="-v"
+        ;;
+    -)
+        case "${OPTARG}" in
+            no-support)
+                SUPPORT=false
+                ;;
+        esac;;
+    esac
 done
 
 ################################
@@ -59,17 +59,21 @@ done
 # Check if Cloudbox is installed
 # develop
 if [ -d "/srv/git/cloudbox" ]; then
-   echo "Cloudbox installed. Exiting..."
-   exit 1
+    echo "==== Cloudbox Install Detected ===="
+    echo "Cloudbox installed. Exiting..."
+    echo "==== Cloudbox Install Detected ===="
+    exit 1
 fi
 
 # master
 for directory in /home/*/*/ ; do
-  base=$(basename "$directory")
-  if [ "$base" == "cloudbox" ]; then
-   echo "Cloudbox installed. Exiting..."
-   exit 1
-  fi
+    base=$(basename "$directory")
+    if [ "$base" == "cloudbox" ]; then
+        echo "==== Cloudbox Install Detected ===="
+        echo "Cloudbox installed. Exiting..."
+        echo "==== Cloudbox Install Detected ===="
+        exit 1
+    fi
 done
 
 # Check for supported Ubuntu Releases
@@ -93,7 +97,7 @@ else
         echo "Do not ask for support on our discord."
         echo "==== UNSUPPORTED OS ===="
         sleep 10
-    fi
+  fi
 fi
 
 # Check if using valid arch
