@@ -15,7 +15,7 @@
 VERBOSE=false
 BRANCH='master'
 SALTBOX_PATH="/srv/git/saltbox"
-SALTBOX_REPO="https://github.com/saltyorg/saltbox.git"
+SALTBOX_REPO="https://github.com/btmarouane/saltbox.git"
 
 ################################
 # Functions
