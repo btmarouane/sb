@@ -229,7 +229,7 @@ install () {
         echo ""
         echo "Running Saltbox Tags: ${tags_sb//,/,  }"
         echo ""
-        run_playbook_sb "$arguments_sb,core" -e "user.domain=${domain} primary=${primary_domain}"
+        run_playbook_sb "$arguments_sb"
         echo ""
 
     fi
