@@ -166,11 +166,12 @@ install () {
 
     # Split tags from extra arguments
     # https://stackoverflow.com/a/10520842
-    local re="^(\S+[.].\S+)?\s(\S+)\s?(-.*)?$"
+    local re="^(\S+[.].\S+)?\s(\S+)\s?(--primary)?(-.*)?$"
     if [[ "$arg_clean" =~ $re ]]; then
         local domain="${BASH_REMATCH[1]}"
         local tags_arg="${BASH_REMATCH[2]}"
-        local extra_arg="${BASH_REMATCH[3]}"
+        local primary_domain="${BASH_REMATCH[3]}"
+        local extra_arg="${BASH_REMATCH[4]}"
     else
         tags_arg="$arg_clean"
     fi
@@ -205,23 +206,20 @@ install () {
 
     local primary_domain=false
 
-    if [[ $extra_arg == *--primary* && $domain != "" ]]; then
+    if [[ $primary_domain == "--primary" && "X${domain}" != "X" ]]; then
         primary_domain=true
     fi
-
-    echo $domain
-    echo $primary_domain
-    echo $tags_sandbox
-    echo $tags_sb
-    exit 1
-
-
 
     # Saltbox Ansible Playbook
     if [[ -n "$tags_sb" ]]; then
 
         # Build arguments
         local arguments_sb="--tags $tags_sb"
+
+        if [[ $primary_domain == true ]]; then
+            arguments_sb="${arguments_sb},traefik"
+            extra_arg="${extra_arg} -e 'user.domain=${domain}'"
+        fi
 
         if [[ -n "$extra_arg" ]]; then
             arguments_sb="${arguments_sb} ${extra_arg}"
@@ -231,7 +229,7 @@ install () {
         echo ""
         echo "Running Saltbox Tags: ${tags_sb//,/,  }"
         echo ""
-        run_playbook_sb "$arguments_sb"
+        run_playbook_sb "$arguments_sb,core" -e "user.domain=${domain} primary=${primary_domain}"
         echo ""
 
     fi
@@ -241,6 +239,11 @@ install () {
 
         # Build arguments
         local arguments_sandbox="--tags $tags_sandbox"
+
+        if [[ $primary_domain == true ]]; then
+            arguments_sb="${arguments_sb},traefik"
+            extra_arg="${extra_arg} -e 'user.domain=${domain}'"
+        fi
 
         if [[ -n "$extra_arg" ]]; then
             arguments_sandbox="${arguments_sandbox} ${extra_arg}"
@@ -261,6 +264,11 @@ install () {
         # Build arguments
         local arguments_saltboxmod="--tags $tags_saltboxmod"
 
+        if [[ $primary_domain == true ]]; then
+            arguments_sb="${arguments_sb},traefik"
+            extra_arg="${extra_arg} -e 'user.domain=${domain}'"
+        fi
+        
         if [[ -n "$extra_arg" ]]; then
             arguments_saltboxmod="${arguments_saltboxmod} ${extra_arg}"
         fi
