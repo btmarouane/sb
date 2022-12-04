@@ -187,10 +187,14 @@ install () {
     local tags_sb
     local tags_sandbox
     local tags_saltboxmod
+    local primary_domain
 
     for i in "${!tags[@]}"
     do
-        if [[ ${tags[i]} == sandbox-* ]]; then
+        if [[ ${tags[i]} == --primary ]]; then
+          primary_domain=true
+
+        elif [[ ${tags[i]} == sandbox-* ]]; then
             tags_sandbox="${tags_sandbox}${tags_sandbox:+,}${tags[i]##sandbox-}"
 
         elif [[ ${tags[i]} == mod-* ]]; then
@@ -201,6 +205,7 @@ install () {
 
         fi
     done
+    echo $primary_domain
     echo $tags_sandbox
     echo $tags_sb
     exit 1
