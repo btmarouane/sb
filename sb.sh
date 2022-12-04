@@ -24,8 +24,8 @@ fi
 # Scripts
 ################################
 
-source /srv/git/sb/yaml.sh
-create_variables /srv/git/saltbox/accounts.yml
+#source /srv/git/sb/yaml.sh
+#create_variables /srv/git/saltbox/accounts.yml
 
 ################################
 # Variables
@@ -166,10 +166,12 @@ install () {
 
     # Split tags from extra arguments
     # https://stackoverflow.com/a/10520842
-    local re="^(\S+)\s+(-.*)?$"
+    local re="^(\S+[.].\S+)?\s(\S+)\s?(--primary)?(-.*)?$"
     if [[ "$arg_clean" =~ $re ]]; then
-        local tags_arg="${BASH_REMATCH[1]}"
-        local extra_arg="${BASH_REMATCH[2]}"
+        local domain="${BASH_REMATCH[1]}"
+        local tags_arg="${BASH_REMATCH[2]}"
+        local primary_domain="${BASH_REMATCH[3]}"
+        local extra_arg="${BASH_REMATCH[4]}"
     else
         tags_arg="$arg_clean"
     fi
@@ -202,11 +204,22 @@ install () {
         fi
     done
 
+    local primary_domain=false
+
+    if [[ $primary_domain == "--primary" && "X${domain}" != "X" ]]; then
+        primary_domain=true
+    fi
+
     # Saltbox Ansible Playbook
     if [[ -n "$tags_sb" ]]; then
 
         # Build arguments
         local arguments_sb="--tags $tags_sb"
+
+        if [[ $primary_domain == true ]]; then
+            arguments_sb="${arguments_sb},traefik"
+            extra_arg="${extra_arg} -e 'user.domain=${domain}'"
+        fi
 
         if [[ -n "$extra_arg" ]]; then
             arguments_sb="${arguments_sb} ${extra_arg}"
@@ -216,7 +229,7 @@ install () {
         echo ""
         echo "Running Saltbox Tags: ${tags_sb//,/,  }"
         echo ""
-        run_playbook_sb "$arguments_sb"
+        run_playbook_sb "$arguments_sb,core" -e "user.domain=${domain} primary=${primary_domain}"
         echo ""
 
     fi
@@ -226,6 +239,11 @@ install () {
 
         # Build arguments
         local arguments_sandbox="--tags $tags_sandbox"
+
+        if [[ $primary_domain == true ]]; then
+            arguments_sb="${arguments_sb},traefik"
+            extra_arg="${extra_arg} -e 'user.domain=${domain}'"
+        fi
 
         if [[ -n "$extra_arg" ]]; then
             arguments_sandbox="${arguments_sandbox} ${extra_arg}"
@@ -246,6 +264,11 @@ install () {
         # Build arguments
         local arguments_saltboxmod="--tags $tags_saltboxmod"
 
+        if [[ $primary_domain == true ]]; then
+            arguments_sb="${arguments_sb},traefik"
+            extra_arg="${extra_arg} -e 'user.domain=${domain}'"
+        fi
+        
         if [[ -n "$extra_arg" ]]; then
             arguments_saltboxmod="${arguments_saltboxmod} ${extra_arg}"
         fi
@@ -419,30 +442,16 @@ update-ansible () {
 
 usage () {
     echo "Usage:"
-    echo "    sb update              Update Saltbox."
-    echo "    sb list                List Saltbox tags."
-    echo "    sb install <tag>       Install <tag>."
-    echo "    sb update-ansible      Re-install Ansible."
+    echo "    sb update                                       Update Saltbox."
+    echo "    sb list                                         List Saltbox tags."
+    echo "    sb install [<domain name>] <tag> [--primary]    Install <tag> using [<domain name>]."
+    echo "        example: sb install mydomain.com sandbox-wordpress,sandbox-invoiceninja --primary"
+    echo "    sb update-ansible                               Re-install Ansible."
 }
 
 ################################
 # Update check
 ################################
-
-cd "${SB_REPO_PATH}" || exit
-
-git fetch
-HEADHASH=$(git rev-parse HEAD)
-UPSTREAMHASH=$(git rev-parse "master@{upstream}")
-
-if [ "$HEADHASH" != "$UPSTREAMHASH" ]
-then
-    echo -e Not up to date with origin. Updating.
-    sb-update
-    echo -e Relaunching with previous arguments.
-    sudo "$0" "$@"
-    exit 0
-fi
 
 ################################
 # Argument Parser
