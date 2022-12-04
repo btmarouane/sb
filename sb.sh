@@ -195,7 +195,7 @@ install () {
         if [[ ${tags[i]} == --primary ]]; then
           primary_domain=true
 
-        elif [[ ${tags[i]} == *.* ]]: then
+        elif [[ ${tags[i]} == *.* ]]; then
           domain=${tags[i]}
 
         elif [[ ${tags[i]} == sandbox-* ]]; then
