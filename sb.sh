@@ -24,8 +24,8 @@ fi
 # Scripts
 ################################
 
-source /srv/git/sb/yaml.sh
-create_variables /srv/git/saltbox/accounts.yml
+#source /srv/git/sb/yaml.sh
+#create_variables /srv/git/saltbox/accounts.yml
 
 ################################
 # Variables
@@ -182,7 +182,7 @@ install () {
     # https://stackoverflow.com/a/31736999
     local tags=()
     readarray -t tags < <(printf '%s\n' "${tags_tmp[@]}" | awk '!x[$0]++')
-
+    exit 1
     # Build SB/Sandbox/Saltbox-mod tag arrays
     local tags_sb
     local tags_sandbox
@@ -428,21 +428,6 @@ usage () {
 ################################
 # Update check
 ################################
-
-cd "${SB_REPO_PATH}" || exit
-
-git fetch
-HEADHASH=$(git rev-parse HEAD)
-UPSTREAMHASH=$(git rev-parse "master@{upstream}")
-
-if [ "$HEADHASH" != "$UPSTREAMHASH" ]
-then
-    echo -e Not up to date with origin. Updating.
-    sb-update
-    echo -e Relaunching with previous arguments.
-    sudo "$0" "$@"
-    exit 0
-fi
 
 ################################
 # Argument Parser
