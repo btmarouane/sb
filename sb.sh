@@ -166,18 +166,19 @@ install () {
 
     # Split tags from extra arguments
     # https://stackoverflow.com/a/10520842
-    local re="^(\S+)\s+(-.*)?$"
+    local re="^(\S+[.].\S+)?\s(\S+)\s+(-.*)?$"
     if [[ "$arg_clean" =~ $re ]]; then
-        local tags_arg="${BASH_REMATCH[1]}"
-        local extra_arg="${BASH_REMATCH[2]}"
+        local domain="${BASH_REMATCH[1]}"
+        local tags_arg="${BASH_REMATCH[2]}"
+        local extra_arg="${BASH_REMATCH[3]}"
     else
         tags_arg="$arg_clean"
     fi
-    echo $arg_clean
+
     # Save tags into 'tags' array
     # shellcheck disable=SC2206
     local tags_tmp=(${tags_arg//,/ })
-    echo $tags_tmp
+
     # Remove duplicate entries from array
     # https://stackoverflow.com/a/31736999
     local tags=()
@@ -187,18 +188,10 @@ install () {
     local tags_sb
     local tags_sandbox
     local tags_saltboxmod
-    local domain
-    local primary_domain
 
     for i in "${!tags[@]}"
     do
-        if [[ ${tags[i]} == --primary ]]; then
-          primary_domain=true
-
-        elif [[ ${tags[i]} == *.* ]]; then
-          domain=${tags[i]}
-
-        elif [[ ${tags[i]} == sandbox-* ]]; then
+        if [[ ${tags[i]} == sandbox-* ]]; then
             tags_sandbox="${tags_sandbox}${tags_sandbox:+,}${tags[i]##sandbox-}"
 
         elif [[ ${tags[i]} == mod-* ]]; then
@@ -209,6 +202,13 @@ install () {
 
         fi
     done
+
+    local primary_domain=false
+
+    if [[ $extra_arg == *--primary* && $domain != "" ]]; then
+        primary_domain=true
+    fi
+
     echo $domain
     echo $primary_domain
     echo $tags_sandbox
@@ -434,10 +434,11 @@ update-ansible () {
 
 usage () {
     echo "Usage:"
-    echo "    sb update              Update Saltbox."
-    echo "    sb list                List Saltbox tags."
-    echo "    sb install <tag>       Install <tag>."
-    echo "    sb update-ansible      Re-install Ansible."
+    echo "    sb update                                       Update Saltbox."
+    echo "    sb list                                         List Saltbox tags."
+    echo "    sb install [<domain name>] <tag> [--primary]    Install <tag> using [<domain name>]."
+    echo "        example: sb install mydomain.com sandbox-wordpress,sandbox-invoiceninja --primary"
+    echo "    sb update-ansible                               Re-install Ansible."
 }
 
 ################################
