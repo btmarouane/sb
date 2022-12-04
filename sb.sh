@@ -173,7 +173,7 @@ install () {
     else
         tags_arg="$arg_clean"
     fi
-
+    echo $extra_arg
     # Save tags into 'tags' array
     # shellcheck disable=SC2206
     local tags_tmp=(${tags_arg//,/ })
@@ -197,7 +197,7 @@ install () {
 
         elif [[ ${tags[i]} == *.* ]]; then
           domain=${tags[i]}
-          echo "h"
+
         elif [[ ${tags[i]} == sandbox-* ]]; then
             tags_sandbox="${tags_sandbox}${tags_sandbox:+,}${tags[i]##sandbox-}"
 
@@ -214,6 +214,9 @@ install () {
     echo $tags_sandbox
     echo $tags_sb
     exit 1
+
+
+
     # Saltbox Ansible Playbook
     if [[ -n "$tags_sb" ]]; then
 
