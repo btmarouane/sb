@@ -182,7 +182,7 @@ install () {
     # https://stackoverflow.com/a/31736999
     local tags=()
     readarray -t tags < <(printf '%s\n' "${tags_tmp[@]}" | awk '!x[$0]++')
-    echo $tags
+    echo $tags[@]
     # Build SB/Sandbox/Saltbox-mod tag arrays
     local tags_sb
     local tags_sandbox
