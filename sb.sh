@@ -173,7 +173,7 @@ install () {
     else
         tags_arg="$arg_clean"
     fi
-
+    echo $arg_clean
     # Save tags into 'tags' array
     # shellcheck disable=SC2206
     local tags_tmp=(${tags_arg//,/ })
