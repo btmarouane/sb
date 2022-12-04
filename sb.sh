@@ -182,7 +182,7 @@ install () {
     # https://stackoverflow.com/a/31736999
     local tags=()
     readarray -t tags < <(printf '%s\n' "${tags_tmp[@]}" | awk '!x[$0]++')
-    exit 1
+
     # Build SB/Sandbox/Saltbox-mod tag arrays
     local tags_sb
     local tags_sandbox
@@ -201,7 +201,7 @@ install () {
 
         fi
     done
-
+    echo $tags_sb
     # Saltbox Ansible Playbook
     if [[ -n "$tags_sb" ]]; then
 
