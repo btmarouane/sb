@@ -197,7 +197,7 @@ install () {
 
         elif [[ ${tags[i]} == *.* ]]; then
           domain=${tags[i]}
-
+          echo "h"
         elif [[ ${tags[i]} == sandbox-* ]]; then
             tags_sandbox="${tags_sandbox}${tags_sandbox:+,}${tags[i]##sandbox-}"
 
