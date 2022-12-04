@@ -201,7 +201,9 @@ install () {
 
         fi
     done
+    echo $tags_sandbox
     echo $tags_sb
+    exit 1
     # Saltbox Ansible Playbook
     if [[ -n "$tags_sb" ]]; then
 
