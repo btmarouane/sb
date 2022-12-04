@@ -24,8 +24,8 @@ fi
 # Scripts
 ################################
 
-#source /srv/git/sb/yaml.sh
-#create_variables /srv/git/saltbox/accounts.yml
+source /srv/git/sb/yaml.sh
+create_variables /srv/git/saltbox/accounts.yml
 
 ################################
 # Variables
@@ -268,7 +268,7 @@ install () {
             arguments_sb="${arguments_sb},traefik"
             extra_arg="${extra_arg} -e 'user.domain=${domain}'"
         fi
-        
+
         if [[ -n "$extra_arg" ]]; then
             arguments_saltboxmod="${arguments_saltboxmod} ${extra_arg}"
         fi
