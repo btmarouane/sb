@@ -173,11 +173,11 @@ install () {
     else
         tags_arg="$arg_clean"
     fi
-    echo $extra_arg
+
     # Save tags into 'tags' array
     # shellcheck disable=SC2206
     local tags_tmp=(${tags_arg//,/ })
-
+    echo $tags_tmp
     # Remove duplicate entries from array
     # https://stackoverflow.com/a/31736999
     local tags=()
