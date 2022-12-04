@@ -182,17 +182,21 @@ install () {
     # https://stackoverflow.com/a/31736999
     local tags=()
     readarray -t tags < <(printf '%s\n' "${tags_tmp[@]}" | awk '!x[$0]++')
-    echo ${!tags[@]}
+
     # Build SB/Sandbox/Saltbox-mod tag arrays
     local tags_sb
     local tags_sandbox
     local tags_saltboxmod
+    local domain
     local primary_domain
 
     for i in "${!tags[@]}"
     do
         if [[ ${tags[i]} == --primary ]]; then
           primary_domain=true
+
+        elif [[ ${tags[i]} == *.* ]]: then
+          domain=${tags[i]}
 
         elif [[ ${tags[i]} == sandbox-* ]]; then
             tags_sandbox="${tags_sandbox}${tags_sandbox:+,}${tags[i]##sandbox-}"
@@ -205,6 +209,7 @@ install () {
 
         fi
     done
+    echo $domain
     echo $primary_domain
     echo $tags_sandbox
     echo $tags_sb
