@@ -252,8 +252,7 @@ install () {
         if [[ -n "$extra_arg" ]]; then
             arguments_sandbox="${arguments_sandbox} ${extra_arg}"
         fi
-        echo $arguments_sandbox
-        exit 1
+        
         # Run playbook
         echo "========================="
         echo ""
