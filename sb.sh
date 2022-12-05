@@ -259,7 +259,7 @@ install () {
         echo ""
         echo "Running Sandbox Tags: ${tags_sandbox//,/,  }"
         echo ""
-        run_playbook_sandbox "$arguments_sandbox"
+        run_playbook_sandbox $arguments_sandbox
         echo ""
     fi
 
