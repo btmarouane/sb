@@ -26,7 +26,7 @@ fi
 
 source /srv/git/sb/yaml.sh
 create_variables /srv/git/saltbox/accounts.yml
-
+create_variables /srv/git/saltbox/config.yml.j2
 ################################
 # Variables
 ################################
