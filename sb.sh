@@ -210,7 +210,7 @@ install () {
 
     # Saltbox Ansible Playbook
     if [[ -n "$tags_sb" ]]; then
-
+        echo "saltbox run"
         # Build arguments
         local arguments_sb="--tags $tags_sb"
 
@@ -237,7 +237,7 @@ install () {
 
     # Sandbox Ansible Playbook
     if [[ -n "$tags_sandbox" ]]; then
-
+        echo "sandbox run"
         # Build arguments
         local arguments_sandbox="--tags $tags_sandbox"
 
