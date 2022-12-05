@@ -26,7 +26,6 @@ fi
 
 source /srv/git/sb/yaml.sh
 create_variables /srv/git/saltbox/accounts.yml
-create_variables /srv/git/saltbox/config.yml.j2
 ################################
 # Variables
 ################################
@@ -203,9 +202,8 @@ install () {
 
         fi
     done
-
     if [[ $primary_domain == "--primary" && "X${domain}" != "X" ]]; then
-        primary_domain=true
+	    run_playbook_sb "--tags traefik -e domain=$domain"
     fi
 
     # Saltbox Ansible Playbook
@@ -214,10 +212,6 @@ install () {
         # Build arguments
         local arguments_sb="--tags $tags_sb"
 
-        if [[ $primary_domain == true ]]; then
-            arguments_sb="${arguments_sb},traefik"
-        fi
-
         if [[ "X${domain}" != "X" ]]; then
             extra_arg="${extra_arg} -e domain=$domain"
         fi
@@ -225,7 +219,7 @@ install () {
         if [[ -n "$extra_arg" ]]; then
             arguments_sb="${arguments_sb} ${extra_arg}"
         fi
-
+	echo $arguments_sb
         # Run playbook
         echo ""
         echo "Running Saltbox Tags: ${tags_sb//,/,  }"
@@ -240,10 +234,6 @@ install () {
         echo "sandbox run"
         # Build arguments
         local arguments_sandbox="--tags $tags_sandbox"
-
-        if [[ $primary_domain == true ]]; then
-            arguments_sb="${arguments_sb},traefik"
-        fi
 
         if [[ "X${domain}" != "X" ]]; then
             extra_arg="${extra_arg} -e domain=$domain"
@@ -268,10 +258,6 @@ install () {
 
         # Build arguments
         local arguments_saltboxmod="--tags $tags_saltboxmod"
-
-        if [[ $primary_domain == true ]]; then
-            arguments_sb="${arguments_sb},traefik"
-        fi
 
         if [[ "X${domain}" != "X" ]]; then
             extra_arg="${extra_arg} -e domain=$domain"
