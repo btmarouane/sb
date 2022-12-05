@@ -223,6 +223,9 @@ install () {
 
         if [[ $primary_domain == true ]]; then
             arguments_sb="${arguments_sb},traefik"
+        fi
+
+        if [[ "X${domain}" != "X" ]]; then
             extra_arg="${extra_arg} -e 'user.domain=${domain}'"
         fi
 
@@ -247,6 +250,9 @@ install () {
 
         if [[ $primary_domain == true ]]; then
             arguments_sb="${arguments_sb},traefik"
+        fi
+
+        if [[ "X${domain}" != "X" ]]; then
             extra_arg="${extra_arg} -e 'user.domain=${domain}'"
         fi
 
@@ -271,6 +277,9 @@ install () {
 
         if [[ $primary_domain == true ]]; then
             arguments_sb="${arguments_sb},traefik"
+        fi
+
+        if [[ "X${domain}" != "X" ]]; then
             extra_arg="${extra_arg} -e 'user.domain=${domain}'"
         fi
 
