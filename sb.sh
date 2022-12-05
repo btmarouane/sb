@@ -219,7 +219,7 @@ install () {
         fi
 
         if [[ "X${domain}" != "X" ]]; then
-            extra_arg="${extra_arg} --extra-vars=\"{user.domain: $domain}\""
+            extra_arg="${extra_arg} --extra-vars='domain=$domain'"
         fi
 
         if [[ -n "$extra_arg" ]]; then
@@ -246,7 +246,7 @@ install () {
         fi
 
         if [[ "X${domain}" != "X" ]]; then
-            extra_arg="${extra_arg} --extra-vars=\"{user.domain: $domain}\""
+            extra_arg="${extra_arg} --extra-vars='domain=$domain'"
         fi
 
         if [[ -n "$extra_arg" ]]; then
@@ -273,7 +273,7 @@ install () {
         fi
 
         if [[ "X${domain}" != "X" ]]; then
-            extra_arg="${extra_arg} --extra-vars=\"{user.domain: $domain}\""
+            extra_arg="${extra_arg} --extra-vars='domain=$domain'"
         fi
 
         if [[ -n "$extra_arg" ]]; then
