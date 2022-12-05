@@ -208,13 +208,6 @@ install () {
         primary_domain=true
     fi
 
-    echo $primary_domain
-    echo $domain
-    echo $tags_sandbox
-    echo $tags_sb
-
-    exit 1
-
     # Saltbox Ansible Playbook
     if [[ -n "$tags_sb" ]]; then
 
