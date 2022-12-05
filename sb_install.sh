@@ -149,6 +149,12 @@ for i in "$SB_PATH"/*.sh; do
 done
 shopt -u nullglob
 
+# Relaunch script from new location
+if [ "$SCRIPT_PATH" != "$SB_INSTALL_SCRIPT" ]; then
+    bash -H "$SB_INSTALL_SCRIPT" "$@"
+    exit $?
+fi
+
 # Install Saltbox Dependencies
 run_cmd bash -H $SB_PATH/sb_dep.sh $VERBOSE_OPT
 
