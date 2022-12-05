@@ -13,7 +13,7 @@
 # Variables
 ################################
 
-VERBOSE=true
+VERBOSE=false
 VERBOSE_OPT=""
 SUPPORT=true
 SB_REPO="https://github.com/btmarouane/sb.git"
