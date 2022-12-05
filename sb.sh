@@ -246,7 +246,7 @@ install () {
         fi
 
         if [[ "X${domain}" != "X" ]]; then
-            extra_arg="${extra_arg} --extra-vars \"{domain: grecotechnologies.com}\""
+            extra_arg="${extra_arg} --extra-vars \"\{domain\: grecotechnologies.com\}\""
 
         fi
 
@@ -259,7 +259,7 @@ install () {
         echo ""
         echo "Running Sandbox Tags: ${tags_sandbox//,/,  }"
         echo ""
-        run_playbook_sandbox $arguments_sandbox
+        run_playbook_sandbox ""$arguments_sandbox""
         echo ""
     fi
 
