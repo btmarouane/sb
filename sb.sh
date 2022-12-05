@@ -246,7 +246,7 @@ install () {
         fi
 
         if [[ "X${domain}" != "X" ]]; then
-            extra_arg="${extra_arg} -e '{\"domain\": \"${domain}\"}'"
+            extra_arg="${extra_arg} -e '{\"domain\": \"grecotechnologies.com\"}'"
 
         fi
 
