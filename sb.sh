@@ -246,6 +246,8 @@ install () {
         fi
 
         if [[ "X${domain}" != "X" ]]; then
+            echo "run with domain !"
+            exit 1
             extra_arg="${extra_arg} -e 'user.domain=${domain}'"
         fi
 
