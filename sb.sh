@@ -204,8 +204,6 @@ install () {
         fi
     done
 
-    local primary_domain=false
-
     if [[ $primary_domain == "--primary" && "X${domain}" != "X" ]]; then
         primary_domain=true
     fi
@@ -214,7 +212,7 @@ install () {
     echo $domain
     echo $tags_sandbox
     echo $tags_sb
-    
+
     exit 1
 
     # Saltbox Ansible Playbook
