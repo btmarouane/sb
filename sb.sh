@@ -219,7 +219,7 @@ install () {
         fi
 
         if [[ "X${domain}" != "X" ]]; then
-            extra_arg="${extra_arg} --extra-vars='domain=$domain'"
+            extra_arg="${extra_arg} -e '{\"domain\": \"${domain}\"}'"
         fi
 
         if [[ -n "$extra_arg" ]]; then
@@ -246,13 +246,14 @@ install () {
         fi
 
         if [[ "X${domain}" != "X" ]]; then
-            extra_arg="${extra_arg} --extra-vars='domain=$domain'"
+            extra_arg="${extra_arg} -e '{\"domain\": \"${domain}\"}'"
+
         fi
 
         if [[ -n "$extra_arg" ]]; then
             arguments_sandbox="${arguments_sandbox} ${extra_arg}"
         fi
-        
+
         # Run playbook
         echo "========================="
         echo ""
@@ -273,7 +274,7 @@ install () {
         fi
 
         if [[ "X${domain}" != "X" ]]; then
-            extra_arg="${extra_arg} --extra-vars='domain=$domain'"
+            extra_arg="${extra_arg} -e '{\"domain\": \"${domain}\"}'"
         fi
 
         if [[ -n "$extra_arg" ]]; then
