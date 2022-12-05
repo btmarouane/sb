@@ -16,7 +16,7 @@
 VERBOSE=false
 VERBOSE_OPT=""
 SUPPORT=true
-SB_REPO="https://github.com/btmarouane/sb.git"
+SB_REPO="https://github.com/saltyorg/sb.git"
 SB_PATH="/srv/git/sb"
 SB_INSTALL_SCRIPT="$SB_PATH/sb_install.sh"
 SCRIPT_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/$(basename "${BASH_SOURCE[0]}")"
@@ -148,12 +148,6 @@ for i in "$SB_PATH"/*.sh; do
     fi
 done
 shopt -u nullglob
-
-# Relaunch script from new location
-if [ "$SCRIPT_PATH" != "$SB_INSTALL_SCRIPT" ]; then
-    bash -H "$SB_INSTALL_SCRIPT" "$@"
-    exit $?
-fi
 
 # Install Saltbox Dependencies
 run_cmd bash -H $SB_PATH/sb_dep.sh $VERBOSE_OPT
