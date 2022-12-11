@@ -14,8 +14,8 @@
 
 VERBOSE=false
 BRANCH='master'
-SALTBOX_PATH="/srv/git/bizbox"
-SALTBOX_REPO="https://github.com/jeremiahg7/bizbox.git"
+BIZBOX_PATH="/srv/git/bizbox"
+BIZBOX_REPO="https://github.com/jeremiahg7/bizbox.git"
 
 ################################
 # Functions
@@ -58,9 +58,9 @@ $VERBOSE || exec &>/dev/null
 $VERBOSE && echo "git branch selected: $BRANCH"
 
 ## Clone Bizbox and pull latest commit
-if [ -d "$SALTBOX_PATH" ]; then
-    if [ -d "$SALTBOX_PATH/.git" ]; then
-        cd "$SALTBOX_PATH" || exit
+if [ -d "$BIZBOX_PATH" ]; then
+    if [ -d "$BIZBOX_PATH/.git" ]; then
+        cd "$BIZBOX_PATH" || exit
         git fetch --all --prune
         # shellcheck disable=SC2086
         git checkout -f $BRANCH
@@ -69,10 +69,10 @@ if [ -d "$SALTBOX_PATH" ]; then
         git submodule update --init --recursive
         $VERBOSE && echo "git branch: $(git rev-parse --abbrev-ref HEAD)"
     else
-        cd "$SALTBOX_PATH" || exit
+        cd "$BIZBOX_PATH" || exit
         rm -rf library/
         git init
-        git remote add origin "$SALTBOX_REPO"
+        git remote add origin "$BIZBOX_REPO"
         git fetch --all --prune
         # shellcheck disable=SC2086
         git branch $BRANCH origin/$BRANCH
@@ -83,21 +83,21 @@ if [ -d "$SALTBOX_PATH" ]; then
     fi
 else
     # shellcheck disable=SC2086
-    git clone -b $BRANCH "$SALTBOX_REPO" "$SALTBOX_PATH"
-    cd "$SALTBOX_PATH" || exit
+    git clone -b $BRANCH "$BIZBOX_REPO" "$BIZBOX_PATH"
+    cd "$BIZBOX_PATH" || exit
     git submodule update --init --recursive
     $VERBOSE && echo "git branch: $(git rev-parse --abbrev-ref HEAD)"
 fi
 
 ## Copy settings and config files into Bizbox folder
 shopt -s nullglob
-for i in "$SALTBOX_PATH"/defaults/*.default; do
-    if [ ! -f "$SALTBOX_PATH/$(basename "${i%.*}")" ]; then
-        cp -n "${i}" "$SALTBOX_PATH/$(basename "${i%.*}")"
+for i in "$BIZBOX_PATH"/defaults/*.default; do
+    if [ ! -f "$BIZBOX_PATH/$(basename "${i%.*}")" ]; then
+        cp -n "${i}" "$BIZBOX_PATH/$(basename "${i%.*}")"
     fi
 done
 shopt -u nullglob
 
 ## Activate Git Hooks
-cd "$SALTBOX_PATH" || exit
-bash "$SALTBOX_PATH"/bin/git/init-hooks
+cd "$BIZBOX_PATH" || exit
+bash "$BIZBOX_PATH"/bin/git/init-hooks

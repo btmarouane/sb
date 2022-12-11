@@ -34,16 +34,16 @@ create_variables /srv/git/bizbox/accounts.yml
 ANSIBLE_PLAYBOOK_BINARY_PATH="/usr/local/bin/ansible-playbook"
 
 # Bizbox
-SALTBOX_REPO_PATH="/srv/git/bizbox"
-SALTBOX_PLAYBOOK_PATH="$SALTBOX_REPO_PATH/bizbox.yml"
+BIZBOX_REPO_PATH="/srv/git/bizbox"
+BIZBOX_PLAYBOOK_PATH="$BIZBOX_REPO_PATH/bizbox.yml"
 
 # Sandbox
 SANDBOX_REPO_PATH="/opt/sandbox"
 SANDBOX_PLAYBOOK_PATH="$SANDBOX_REPO_PATH/sandbox.yml"
 
 # Bizbox_mod
-SALTBOXMOD_REPO_PATH="/opt/bizbox_mod"
-SALTBOXMOD_PLAYBOOK_PATH="$SALTBOXMOD_REPO_PATH/bizbox_mod.yml"
+BIZBOXMOD_REPO_PATH="/opt/bizbox_mod"
+BIZBOXMOD_PLAYBOOK_PATH="$BIZBOXMOD_REPO_PATH/bizbox_mod.yml"
 
 # SB
 SB_REPO_PATH="/srv/git/sb"
@@ -57,13 +57,13 @@ git_fetch_and_reset () {
     git fetch --quiet >/dev/null
     git clean --quiet -df >/dev/null
     git reset --quiet --hard "@{u}" >/dev/null
-    git checkout --quiet "${SALTBOX_BRANCH:-master}" >/dev/null
+    git checkout --quiet "${BIZBOX_BRANCH:-master}" >/dev/null
     git clean --quiet -df >/dev/null
     git reset --quiet --hard "@{u}" >/dev/null
     git submodule update --init --recursive
-    chmod 664 "${SALTBOX_REPO_PATH}/ansible.cfg"
+    chmod 664 "${BIZBOX_REPO_PATH}/ansible.cfg"
     # shellcheck disable=SC2154
-    chown -R "${user_name}":"${user_name}" "${SALTBOX_REPO_PATH}"
+    chown -R "${user_name}":"${user_name}" "${BIZBOX_REPO_PATH}"
 }
 
 git_fetch_and_reset_sandbox () {
@@ -101,11 +101,11 @@ run_playbook_sb () {
 
     local arguments=$*
 
-    cd "${SALTBOX_REPO_PATH}" || exit
+    cd "${BIZBOX_REPO_PATH}" || exit
 
     # shellcheck disable=SC2086
     "${ANSIBLE_PLAYBOOK_BINARY_PATH}" \
-        "${SALTBOX_PLAYBOOK_PATH}" \
+        "${BIZBOX_PLAYBOOK_PATH}" \
         --become \
         ${arguments}
 
@@ -133,11 +133,11 @@ run_playbook_bizboxmod () {
 
     local arguments=$*
 
-    cd "${SALTBOXMOD_REPO_PATH}" || exit
+    cd "${BIZBOXMOD_REPO_PATH}" || exit
 
     # shellcheck disable=SC2086
     "${ANSIBLE_PLAYBOOK_BINARY_PATH}" \
-        "${SALTBOXMOD_PLAYBOOK_PATH}" \
+        "${BIZBOXMOD_PLAYBOOK_PATH}" \
         --become \
         ${arguments}
 
@@ -278,11 +278,11 @@ install () {
 
 update () {
 
-    if [[ -d "${SALTBOX_REPO_PATH}" ]]
+    if [[ -d "${BIZBOX_REPO_PATH}" ]]
     then
         echo -e "Updating Bizbox...\n"
 
-        cd "${SALTBOX_REPO_PATH}" || exit
+        cd "${BIZBOX_REPO_PATH}" || exit
 
         git_fetch_and_reset
 
@@ -326,14 +326,14 @@ sb-update () {
 
 sb-list ()  {
 
-    if [[ -d "${SALTBOX_REPO_PATH}" ]]
+    if [[ -d "${BIZBOX_REPO_PATH}" ]]
     then
         echo -e "Bizbox tags:\n"
 
-        cd "${SALTBOX_REPO_PATH}" || exit
+        cd "${BIZBOX_REPO_PATH}" || exit
 
         "${ANSIBLE_PLAYBOOK_BINARY_PATH}" \
-            "${SALTBOX_PLAYBOOK_PATH}" \
+            "${BIZBOX_PLAYBOOK_PATH}" \
             --become \
             --list-tags --skip-tags "always" 2>&1 | grep "TASK TAGS" | cut -d":" -f2 | awk '{sub(/\[/, "")sub(/\]/, "")}1' | cut -c2-
 
@@ -367,13 +367,13 @@ sandbox-list () {
 
 bizboxmod-list () {
 
-    if [[ -d "${SALTBOXMOD_REPO_PATH}" ]]
+    if [[ -d "${BIZBOXMOD_REPO_PATH}" ]]
     then
         echo -e "Bizbox_mod tags (prepend mod-):\n"
 
-        cd "${SALTBOXMOD_REPO_PATH}" || exit
+        cd "${BIZBOXMOD_REPO_PATH}" || exit
         "${ANSIBLE_PLAYBOOK_BINARY_PATH}" \
-            "${SALTBOXMOD_PLAYBOOK_PATH}" \
+            "${BIZBOXMOD_PLAYBOOK_PATH}" \
             --become \
             --list-tags --skip-tags "always,sanity_check" 2>&1 | grep "TASK TAGS" | cut -d":" -f2 | awk '{sub(/\[/, "")sub(/\]/, "")}1' | cut -c2-
 
@@ -385,13 +385,13 @@ bizboxmod-list () {
 }
 
 bizbox-branch () {
-    if [[ -d "${SALTBOX_REPO_PATH}" ]]
+    if [[ -d "${BIZBOX_REPO_PATH}" ]]
     then
         echo -e "Changing Bizbox branch to $1...\n"
 
-        cd "${SALTBOX_REPO_PATH}" || exit
+        cd "${BIZBOX_REPO_PATH}" || exit
 
-        SALTBOX_BRANCH=$1
+        BIZBOX_BRANCH=$1
 
         git_fetch_and_reset
 
