@@ -2,7 +2,7 @@
 #########################################################################
 # Title:         Bizbox: SB Script                                     #
 # Author(s):     desimaniac, chazlarson, salty                          #
-# URL:           https://github.com/saltyorg/sb                         #
+# URL:           https://github.com/jeremiahg7/sb                         #
 # --                                                                    #
 #########################################################################
 #                   GNU General Public License v3.0                     #
