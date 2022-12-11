@@ -1,9 +1,9 @@
 #!/bin/bash
 #################################################################################
-# Title:         Saltbox: Dependencies Installer                                #
+# Title:         Bizbox: Dependencies Installer                                #
 # Author(s):     L3uddz, Desimaniac, EnorMOZ, salty                             #
 # URL:           https://github.com/saltyorg/sb                                 #
-# Description:   Installs dependencies needed for Saltbox.                      #
+# Description:   Installs dependencies needed for Bizbox.                      #
 # --                                                                            #
 #################################################################################
 #                     GNU General Public License v3.0                           #

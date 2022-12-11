@@ -1,7 +1,7 @@
 #!/bin/bash
 #shellcheck disable=SC2220
 #########################################################################
-# Title:         Saltbox Install Script                                 #
+# Title:         Bizbox Install Script                                 #
 # Author(s):     desimaniac, salty                                      #
 # URL:           https://github.com/saltyorg/sb                         #
 # --                                                                    #
@@ -16,7 +16,7 @@
 VERBOSE=true
 VERBOSE_OPT=""
 SUPPORT=true
-SB_REPO="https://github.com/btmarouane/sb.git"
+SB_REPO="https://github.com/jeremiahg7/sb.git"
 SB_PATH="/srv/git/sb"
 SB_INSTALL_SCRIPT="$SB_PATH/sb_install.sh"
 SCRIPT_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/$(basename "${BASH_SOURCE[0]}")"
@@ -113,7 +113,7 @@ else
     exit 1
 fi
 
-echo "Installing Saltbox Dependencies."
+echo "Installing Bizbox Dependencies."
 
 $VERBOSE || exec &>/dev/null
 
@@ -149,8 +149,8 @@ for i in "$SB_PATH"/*.sh; do
 done
 shopt -u nullglob
 
-# Install Saltbox Dependencies
+# Install Bizbox Dependencies
 run_cmd bash -H $SB_PATH/sb_dep.sh $VERBOSE_OPT
 
-# Clone Saltbox Repo
+# Clone Bizbox Repo
 run_cmd bash -H $SB_PATH/sb_repo.sh -b master $VERBOSE_OPT

@@ -1,6 +1,6 @@
 #!/bin/bash
 #########################################################################
-# Title:         Saltbox: SB Script                                     #
+# Title:         Bizbox: SB Script                                     #
 # Author(s):     desimaniac, chazlarson, salty                          #
 # URL:           https://github.com/saltyorg/sb                         #
 # --                                                                    #
@@ -25,7 +25,7 @@ fi
 ################################
 
 source /srv/git/sb/yaml.sh
-create_variables /srv/git/saltbox/accounts.yml
+create_variables /srv/git/bizbox/accounts.yml
 ################################
 # Variables
 ################################
@@ -33,17 +33,17 @@ create_variables /srv/git/saltbox/accounts.yml
 # Ansible
 ANSIBLE_PLAYBOOK_BINARY_PATH="/usr/local/bin/ansible-playbook"
 
-# Saltbox
-SALTBOX_REPO_PATH="/srv/git/saltbox"
-SALTBOX_PLAYBOOK_PATH="$SALTBOX_REPO_PATH/saltbox.yml"
+# Bizbox
+SALTBOX_REPO_PATH="/srv/git/bizbox"
+SALTBOX_PLAYBOOK_PATH="$SALTBOX_REPO_PATH/bizbox.yml"
 
 # Sandbox
 SANDBOX_REPO_PATH="/opt/sandbox"
 SANDBOX_PLAYBOOK_PATH="$SANDBOX_REPO_PATH/sandbox.yml"
 
-# Saltbox_mod
-SALTBOXMOD_REPO_PATH="/opt/saltbox_mod"
-SALTBOXMOD_PLAYBOOK_PATH="$SALTBOXMOD_REPO_PATH/saltbox_mod.yml"
+# Bizbox_mod
+SALTBOXMOD_REPO_PATH="/opt/bizbox_mod"
+SALTBOXMOD_PLAYBOOK_PATH="$SALTBOXMOD_REPO_PATH/bizbox_mod.yml"
 
 # SB
 SB_REPO_PATH="/srv/git/sb"
@@ -129,7 +129,7 @@ run_playbook_sandbox () {
 
 }
 
-run_playbook_saltboxmod () {
+run_playbook_bizboxmod () {
 
     local arguments=$*
 
@@ -184,10 +184,10 @@ install () {
     local tags=()
     readarray -t tags < <(printf '%s\n' "${tags_tmp[@]}" | awk '!x[$0]++')
 
-    # Build SB/Sandbox/Saltbox-mod tag arrays
+    # Build SB/Sandbox/Bizbox-mod tag arrays
     local tags_sb
     local tags_sandbox
-    local tags_saltboxmod
+    local tags_bizboxmod
 
     for i in "${!tags[@]}"
     do
@@ -195,7 +195,7 @@ install () {
             tags_sandbox="${tags_sandbox}${tags_sandbox:+,}${tags[i]##sandbox-}"
 
         elif [[ ${tags[i]} == mod-* ]]; then
-            tags_saltboxmod="${tags_saltboxmod}${tags_saltboxmod:+,}${tags[i]##mod-}"
+            tags_bizboxmod="${tags_bizboxmod}${tags_bizboxmod:+,}${tags[i]##mod-}"
 
         else
             tags_sb="${tags_sb}${tags_sb:+,}${tags[i]}"
@@ -206,9 +206,8 @@ install () {
 	    run_playbook_sb "--tags traefik -e domain=$domain"
     fi
 
-    # Saltbox Ansible Playbook
+    # Bizbox Ansible Playbook
     if [[ -n "$tags_sb" ]]; then
-        echo "saltbox run"
         # Build arguments
         local arguments_sb="--tags $tags_sb"
 
@@ -219,10 +218,10 @@ install () {
         if [[ -n "$extra_arg" ]]; then
             arguments_sb="${arguments_sb} ${extra_arg}"
         fi
-	echo $arguments_sb
+
         # Run playbook
         echo ""
-        echo "Running Saltbox Tags: ${tags_sb//,/,  }"
+        echo "Running Bizbox Tags: ${tags_sb//,/,  }"
         echo ""
         run_playbook_sb "$arguments_sb"
         echo ""
@@ -231,7 +230,6 @@ install () {
 
     # Sandbox Ansible Playbook
     if [[ -n "$tags_sandbox" ]]; then
-        echo "sandbox run"
         # Build arguments
         local arguments_sandbox="--tags $tags_sandbox"
 
@@ -243,7 +241,7 @@ install () {
         if [[ -n "$extra_arg" ]]; then
             arguments_sandbox="${arguments_sandbox} ${extra_arg}"
         fi
-        echo $arguments_sandbox
+
         # Run playbook
         echo "========================="
         echo ""
@@ -253,26 +251,26 @@ install () {
         echo ""
     fi
 
-    # Saltbox_mod Ansible Playbook
-    if [[ -n "$tags_saltboxmod" ]]; then
+    # Bizbox_mod Ansible Playbook
+    if [[ -n "$tags_bizboxmod" ]]; then
 
         # Build arguments
-        local arguments_saltboxmod="--tags $tags_saltboxmod"
+        local arguments_bizboxmod="--tags $tags_bizboxmod"
 
         if [[ "X${domain}" != "X" ]]; then
             extra_arg="${extra_arg} -e domain=$domain"
         fi
 
         if [[ -n "$extra_arg" ]]; then
-            arguments_saltboxmod="${arguments_saltboxmod} ${extra_arg}"
+            arguments_bizboxmod="${arguments_bizboxmod} ${extra_arg}"
         fi
 
         # Run playbook
         echo "========================="
         echo ""
-        echo "Running Saltbox_mod Tags: ${tags_saltboxmod//,/,  }"
+        echo "Running Bizbox_mod Tags: ${tags_bizboxmod//,/,  }"
         echo ""
-        run_playbook_saltboxmod "$arguments_saltboxmod"
+        run_playbook_bizboxmod "$arguments_bizboxmod"
         echo ""
     fi
 
@@ -282,7 +280,7 @@ update () {
 
     if [[ -d "${SALTBOX_REPO_PATH}" ]]
     then
-        echo -e "Updating Saltbox...\n"
+        echo -e "Updating Bizbox...\n"
 
         cd "${SALTBOX_REPO_PATH}" || exit
 
@@ -292,7 +290,7 @@ update () {
 
         echo -e "Update Completed."
     else
-        echo -e "Saltbox folder not present."
+        echo -e "Bizbox folder not present."
     fi
 
 }
@@ -330,7 +328,7 @@ sb-list ()  {
 
     if [[ -d "${SALTBOX_REPO_PATH}" ]]
     then
-        echo -e "Saltbox tags:\n"
+        echo -e "Bizbox tags:\n"
 
         cd "${SALTBOX_REPO_PATH}" || exit
 
@@ -343,7 +341,7 @@ sb-list ()  {
 
         cd - >/dev/null || exit
     else
-        echo -e "Saltbox folder not present.\n"
+        echo -e "Bizbox folder not present.\n"
     fi
 
 }
@@ -367,11 +365,11 @@ sandbox-list () {
 
 }
 
-saltboxmod-list () {
+bizboxmod-list () {
 
     if [[ -d "${SALTBOXMOD_REPO_PATH}" ]]
     then
-        echo -e "Saltbox_mod tags (prepend mod-):\n"
+        echo -e "Bizbox_mod tags (prepend mod-):\n"
 
         cd "${SALTBOXMOD_REPO_PATH}" || exit
         "${ANSIBLE_PLAYBOOK_BINARY_PATH}" \
@@ -386,10 +384,10 @@ saltboxmod-list () {
 
 }
 
-saltbox-branch () {
+bizbox-branch () {
     if [[ -d "${SALTBOX_REPO_PATH}" ]]
     then
-        echo -e "Changing Saltbox branch to $1...\n"
+        echo -e "Changing Bizbox branch to $1...\n"
 
         cd "${SALTBOX_REPO_PATH}" || exit
 
@@ -401,7 +399,7 @@ saltbox-branch () {
 
         echo -e "Update Completed."
     else
-        echo -e "Saltbox folder not present."
+        echo -e "Bizbox folder not present."
     fi
 }
 
@@ -427,17 +425,17 @@ sandbox-branch () {
 list () {
     sb-list
     sandbox-list
-    saltboxmod-list
+    bizboxmod-list
 }
 
 update-ansible () {
-    bash "/srv/git/saltbox/scripts/update.sh"
+    bash "/srv/git/bizbox/scripts/update.sh"
 }
 
 usage () {
     echo "Usage:"
-    echo "    sb update                                       Update Saltbox."
-    echo "    sb list                                         List Saltbox tags."
+    echo "    sb update                                       Update Bizbox."
+    echo "    sb list                                         List Bizbox tags."
     echo "    sb install [<domain name>] <tag> [--primary]    Install <tag> using [<domain name>]."
     echo "        example: sb install mydomain.com sandbox-wordpress,sandbox-invoiceninja --primary"
     echo "    sb update-ansible                               Re-install Ansible."
@@ -489,7 +487,7 @@ case "$subcommand" in
         install "${roles}"
         ;;
     branch)
-        saltbox-branch "${*}"
+        bizbox-branch "${*}"
         ;;
     sandbox-branch)
         sandbox-branch "${*}"

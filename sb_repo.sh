@@ -1,6 +1,6 @@
 #!/bin/bash
 #########################################################################
-# Title:         Saltbox Repo Cloner Script                             #
+# Title:         Bizbox Repo Cloner Script                             #
 # Author(s):     desimaniac, salty                                      #
 # URL:           https://github.com/saltyorg/sb                         #
 # --                                                                    #
@@ -14,8 +14,8 @@
 
 VERBOSE=false
 BRANCH='master'
-SALTBOX_PATH="/srv/git/saltbox"
-SALTBOX_REPO="https://github.com/btmarouane/saltbox.git"
+SALTBOX_PATH="/srv/git/bizbox"
+SALTBOX_REPO="https://github.com/jeremiahg7/bizbox.git"
 
 ################################
 # Functions
@@ -57,7 +57,7 @@ $VERBOSE || exec &>/dev/null
 
 $VERBOSE && echo "git branch selected: $BRANCH"
 
-## Clone Saltbox and pull latest commit
+## Clone Bizbox and pull latest commit
 if [ -d "$SALTBOX_PATH" ]; then
     if [ -d "$SALTBOX_PATH/.git" ]; then
         cd "$SALTBOX_PATH" || exit
@@ -89,7 +89,7 @@ else
     $VERBOSE && echo "git branch: $(git rev-parse --abbrev-ref HEAD)"
 fi
 
-## Copy settings and config files into Saltbox folder
+## Copy settings and config files into Bizbox folder
 shopt -s nullglob
 for i in "$SALTBOX_PATH"/defaults/*.default; do
     if [ ! -f "$SALTBOX_PATH/$(basename "${i%.*}")" ]; then
