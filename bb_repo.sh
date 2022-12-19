@@ -2,7 +2,7 @@
 #########################################################################
 # Title:         Bizbox Repo Cloner Script                             #
 # Author(s):     desimaniac, salty                                      #
-# URL:           https://github.com/jeremiahg7/sb                         #
+# URL:           https://github.com/jeremiahg7/bb                         #
 # --                                                                    #
 #########################################################################
 #                   GNU General Public License v3.0                     #

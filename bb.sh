@@ -1,8 +1,8 @@
 #!/bin/bash
 #########################################################################
-# Title:         Bizbox: SB Script                                     #
-# Author(s):     desimaniac, chazlarson, salty                          #
-# URL:           https://github.com/jeremiahg7/sb                         #
+# Title:         Bizbox: BB Script                                      #
+# Author(s):     btmarrouane                                            #
+# URL:           https://github.com/GrecoTechnology/bb                  #
 # --                                                                    #
 #########################################################################
 #                   GNU General Public License v3.0                     #
@@ -24,7 +24,7 @@ fi
 # Scripts
 ################################
 
-source /srv/git/sb/yaml.sh
+source /srv/git/bb/yaml.sh
 create_variables /srv/git/bizbox/accounts.yml
 ################################
 # Variables
@@ -46,7 +46,7 @@ BIZBOXMOD_REPO_PATH="/opt/bizbox_mod"
 BIZBOXMOD_PLAYBOOK_PATH="$BIZBOXMOD_REPO_PATH/bizbox_mod.yml"
 
 # SB
-SB_REPO_PATH="/srv/git/sb"
+SB_REPO_PATH="/srv/git/bb"
 
 ################################
 # Functions
@@ -94,7 +94,7 @@ git_fetch_and_reset_sb () {
     git clean --quiet -df >/dev/null
     git reset --quiet --hard "@{u}" >/dev/null
     git submodule update --init --recursive
-    chmod 775 "${SB_REPO_PATH}/sb.sh"
+    chmod 775 "${SB_REPO_PATH}/bb.sh"
 }
 
 run_playbook_sb () {
@@ -312,9 +312,9 @@ sandbox-update () {
 
 }
 
-sb-update () {
+bb-update () {
 
-    echo -e "Updating sb...\n"
+    echo -e "Updating bb...\n"
 
     cd "${SB_REPO_PATH}" || exit
 
@@ -324,7 +324,7 @@ sb-update () {
 
 }
 
-sb-list ()  {
+bb-list ()  {
 
     if [[ -d "${BIZBOX_REPO_PATH}" ]]
     then
@@ -423,7 +423,7 @@ sandbox-branch () {
 }
 
 list () {
-    sb-list
+    bb-list
     sandbox-list
     bizboxmod-list
 }
@@ -434,11 +434,11 @@ update-ansible () {
 
 usage () {
     echo "Usage:"
-    echo "    sb update                                       Update Bizbox."
-    echo "    sb list                                         List Bizbox tags."
-    echo "    sb install [<domain name>] <tag> [--primary]    Install <tag> using [<domain name>]."
-    echo "        example: sb install mydomain.com sandbox-wordpress,sandbox-invoiceninja --primary"
-    echo "    sb update-ansible                               Re-install Ansible."
+    echo "    bb update                                       Update Bizbox."
+    echo "    bb list                                         List Bizbox tags."
+    echo "    bb install [<domain name>] <tag> [--primary]    Install <tag> using [<domain name>]."
+    echo "        example: bb install mydomain.com sandbox-wordpress,sandbox-invoiceninja --primary"
+    echo "    bb update-ansible                               Re-install Ansible."
 }
 
 ################################
@@ -471,7 +471,7 @@ done
 shift $((OPTIND -1))
 
 # Parse commands
-subcommand=$1; shift  # Remove 'sb' from the argument list
+subcommand=$1; shift  # Remove 'bb' from the argument list
 case "$subcommand" in
 
   # Parse options to the various sub commands

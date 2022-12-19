@@ -3,7 +3,7 @@
 #########################################################################
 # Title:         Bizbox Install Script                                 #
 # Author(s):     desimaniac, salty                                      #
-# URL:           https://github.com/jeremiahg7/sb                         #
+# URL:           https://github.com/jeremiahg7/bb                         #
 # --                                                                    #
 #########################################################################
 #                   GNU General Public License v3.0                     #
@@ -16,8 +16,8 @@
 VERBOSE=true
 VERBOSE_OPT=""
 SUPPORT=true
-SB_REPO="https://github.com/jeremiahg7/sb.git"
-SB_PATH="/srv/git/sb"
+SB_REPO="https://github.com/jeremiahg7/bb.git"
+SB_PATH="/srv/git/bb"
 SB_INSTALL_SCRIPT="$SB_PATH/sb_install.sh"
 SCRIPT_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/$(basename "${BASH_SOURCE[0]}")"
 
