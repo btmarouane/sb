@@ -1,8 +1,8 @@
 #!/bin/bash
 #########################################################################
-# Title:         Bizbox Repo Cloner Script                             #
-# Author(s):     desimaniac, salty                                      #
-# URL:           https://github.com/jeremiahg7/bb                         #
+# Title:         Bizbox Repo Cloner Script                              #
+# Author(s):     GrecoTechnology                                        #
+# URL:           https://github.com/GrecoTechnology/bb                  #
 # --                                                                    #
 #########################################################################
 #                   GNU General Public License v3.0                     #
@@ -15,7 +15,7 @@
 VERBOSE=false
 BRANCH='master'
 BIZBOX_PATH="/srv/git/bizbox"
-BIZBOX_REPO="https://github.com/jeremiahg7/bizbox.git"
+BIZBOX_REPO="https://github.com/GrecoTechnology/bizbox.git"
 
 ################################
 # Functions
@@ -23,9 +23,9 @@ BIZBOX_REPO="https://github.com/jeremiahg7/bizbox.git"
 
 usage () {
     echo "Usage:"
-    echo "    sb_repo -b <branch>    Repo branch to use. Default is 'master'."
-    echo "    sb_repo -v             Enable Verbose Mode."
-    echo "    sb_repo -h             Display this help message."
+    echo "    bb_repo -b <branch>    Repo branch to use. Default is 'master'."
+    echo "    bb_repo -v             Enable Verbose Mode."
+    echo "    bb_repo -h             Display this help message."
 }
 
 ################################

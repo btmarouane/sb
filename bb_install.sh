@@ -3,7 +3,7 @@
 #########################################################################
 # Title:         Bizbox Install Script                                 #
 # Author(s):     desimaniac, salty                                      #
-# URL:           https://github.com/jeremiahg7/bb                         #
+# URL:           https://github.com/GrecoTechnology/bb                         #
 # --                                                                    #
 #########################################################################
 #                   GNU General Public License v3.0                     #
@@ -16,9 +16,9 @@
 VERBOSE=true
 VERBOSE_OPT=""
 SUPPORT=true
-SB_REPO="https://github.com/jeremiahg7/bb.git"
-SB_PATH="/srv/git/bb"
-SB_INSTALL_SCRIPT="$SB_PATH/sb_install.sh"
+BB_REPO="https://github.com/GrecoTechnology/bb.git"
+BB_PATH="/srv/git/bb"
+BB_INSTALL_SCRIPT="$BB_PATH/bb_install.sh"
 SCRIPT_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/$(basename "${BASH_SOURCE[0]}")"
 
 ################################
@@ -77,7 +77,7 @@ for directory in /home/*/*/ ; do
 done
 
 # Check for supported Ubuntu Releases
-release=$(lsb_release -cs)
+release=$(lbb_release -cs)
 
 # Add more releases like (focal|jammy)$
 if [[ $release =~ (focal|jammy)$ ]]; then
@@ -126,23 +126,23 @@ run_cmd apt-get update
 run_cmd apt-get install -y git
 
 # Remove existing repo folder
-if [ -d "$SB_PATH" ]; then
-    run_cmd rm -rf $SB_PATH;
+if [ -d "$BB_PATH" ]; then
+    run_cmd rm -rf $BB_PATH;
 fi
 
-# Clone SB repo
+# Clone BB repo
 run_cmd mkdir -p /srv/git
-run_cmd git clone --branch master "${SB_REPO}" "$SB_PATH"
+run_cmd git clone --branch master "${BB_REPO}" "$BB_PATH"
 
 # Set chmod +x on script files
-run_cmd chmod +x $SB_PATH/*.sh
+run_cmd chmod +x $BB_PATH/*.sh
 
 $VERBOSE && echo "Script Path: $SCRIPT_PATH"
-$VERBOSE && echo "SB Install Path: "$SB_INSTALL_SCRIPT
+$VERBOSE && echo "BB Install Path: "$BB_INSTALL_SCRIPT
 
 ## Create script symlinks in /usr/local/bin
 shopt -s nullglob
-for i in "$SB_PATH"/*.sh; do
+for i in "$BB_PATH"/*.sh; do
     if [ ! -f "/usr/local/bin/$(basename "${i%.*}")" ]; then
         run_cmd ln -s "${i}" "/usr/local/bin/$(basename "${i%.*}")"
     fi
@@ -150,7 +150,7 @@ done
 shopt -u nullglob
 
 # Install Bizbox Dependencies
-run_cmd bash -H $SB_PATH/sb_dep.sh $VERBOSE_OPT
+run_cmd bash -H $BB_PATH/bb_dep.sh $VERBOSE_OPT
 
 # Clone Bizbox Repo
-run_cmd bash -H $SB_PATH/sb_repo.sh -b master $VERBOSE_OPT
+run_cmd bash -H $BB_PATH/bb_repo.sh -b master $VERBOSE_OPT

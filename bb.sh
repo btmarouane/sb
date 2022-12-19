@@ -1,7 +1,7 @@
 #!/bin/bash
 #########################################################################
 # Title:         Bizbox: BB Script                                      #
-# Author(s):     btmarrouane                                            #
+# Author(s):     GrecoTechnology                                            #
 # URL:           https://github.com/GrecoTechnology/bb                  #
 # --                                                                    #
 #########################################################################
@@ -45,8 +45,8 @@ SANDBOX_PLAYBOOK_PATH="$SANDBOX_REPO_PATH/sandbox.yml"
 BIZBOXMOD_REPO_PATH="/opt/bizbox_mod"
 BIZBOXMOD_PLAYBOOK_PATH="$BIZBOXMOD_REPO_PATH/bizbox_mod.yml"
 
-# SB
-SB_REPO_PATH="/srv/git/bb"
+# BB
+BB_REPO_PATH="/srv/git/bb"
 
 ################################
 # Functions
@@ -85,7 +85,7 @@ git_fetch_and_reset_sandbox () {
     chown -R "${user_name}":"${user_name}" "${SANDBOX_REPO_PATH}"
 }
 
-git_fetch_and_reset_sb () {
+git_fetch_and_reset_bb () {
 
     git fetch --quiet >/dev/null
     git clean --quiet -df >/dev/null
@@ -94,10 +94,10 @@ git_fetch_and_reset_sb () {
     git clean --quiet -df >/dev/null
     git reset --quiet --hard "@{u}" >/dev/null
     git submodule update --init --recursive
-    chmod 775 "${SB_REPO_PATH}/bb.sh"
+    chmod 775 "${BB_REPO_PATH}/bb.sh"
 }
 
-run_playbook_sb () {
+run_playbook_bb () {
 
     local arguments=$*
 
@@ -184,8 +184,8 @@ install () {
     local tags=()
     readarray -t tags < <(printf '%s\n' "${tags_tmp[@]}" | awk '!x[$0]++')
 
-    # Build SB/Sandbox/Bizbox-mod tag arrays
-    local tags_sb
+    # Build BB/Sandbox/Bizbox-mod tag arrays
+    local tags_bb
     local tags_sandbox
     local tags_bizboxmod
 
@@ -198,32 +198,32 @@ install () {
             tags_bizboxmod="${tags_bizboxmod}${tags_bizboxmod:+,}${tags[i]##mod-}"
 
         else
-            tags_sb="${tags_sb}${tags_sb:+,}${tags[i]}"
+            tags_bb="${tags_bb}${tags_bb:+,}${tags[i]}"
 
         fi
     done
     if [[ $primary_domain == "--primary" && "X${domain}" != "X" ]]; then
-	    run_playbook_sb "--tags traefik -e domain=$domain"
+	    run_playbook_bb "--tags traefik -e domain=$domain"
     fi
 
     # Bizbox Ansible Playbook
-    if [[ -n "$tags_sb" ]]; then
+    if [[ -n "$tags_bb" ]]; then
         # Build arguments
-        local arguments_sb="--tags $tags_sb"
+        local arguments_bb="--tags $tags_bb"
 
         if [[ "X${domain}" != "X" ]]; then
             extra_arg="${extra_arg} -e domain=$domain"
         fi
 
         if [[ -n "$extra_arg" ]]; then
-            arguments_sb="${arguments_sb} ${extra_arg}"
+            arguments_bb="${arguments_bb} ${extra_arg}"
         fi
 
         # Run playbook
         echo ""
-        echo "Running Bizbox Tags: ${tags_sb//,/,  }"
+        echo "Running Bizbox Tags: ${tags_bb//,/,  }"
         echo ""
-        run_playbook_sb "$arguments_sb"
+        run_playbook_bb "$arguments_bb"
         echo ""
 
     fi
@@ -286,7 +286,7 @@ update () {
 
         git_fetch_and_reset
 
-        run_playbook_sb "--tags settings" && echo -e '\n'
+        run_playbook_bb "--tags settings" && echo -e '\n'
 
         echo -e "Update Completed."
     else
@@ -316,9 +316,9 @@ bb-update () {
 
     echo -e "Updating bb...\n"
 
-    cd "${SB_REPO_PATH}" || exit
+    cd "${BB_REPO_PATH}" || exit
 
-    git_fetch_and_reset_sb
+    git_fetch_and_reset_bb
 
     echo -e "Update Completed."
 
@@ -395,7 +395,7 @@ bizbox-branch () {
 
         git_fetch_and_reset
 
-        run_playbook_sb "--tags settings" && echo -e '\n'
+        run_playbook_bb "--tags settings" && echo -e '\n'
 
         echo -e "Update Completed."
     else

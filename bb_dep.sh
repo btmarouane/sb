@@ -1,9 +1,9 @@
 #!/bin/bash
 #################################################################################
-# Title:         Bizbox: Dependencies Installer                                #
-# Author(s):     L3uddz, Desimaniac, EnorMOZ, salty                             #
-# URL:           https://github.com/jeremiahg7/bb                                 #
-# Description:   Installs dependencies needed for Bizbox.                      #
+# Title:         Bizbox: Dependencies Installer                                 #
+# Author(s):     GrecoTechnology                                                #
+# URL:           https://github.com/GrecoTechnology/bb                          #
+# Description:   Installs dependencies needed for Bizbox.                       #
 # --                                                                            #
 #################################################################################
 #                     GNU General Public License v3.0                           #
